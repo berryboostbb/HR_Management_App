@@ -54,15 +54,15 @@ const CustomTabBar = React.memo(
       const color = isFocused ? colors.primary : colors.mediumGray;
       switch (routeName) {
         case 'Home':
-          return <HomeIcon color={color} />;
+          return <HomeIcon color={color} isFocused={isFocused} />;
         case 'Plan':
-          return <PlanIcon color={color} />;
+          return <PlanIcon color={color} isFocused={isFocused}/>;
         case 'Leaves':
-          return <LeavesIcon color={color} />;
+          return <LeavesIcon color={color} isFocused={isFocused}/>;
         case 'More':
-          return <MoreIcon color={color} />;
+          return <MoreIcon color={color}isFocused={isFocused} />;
         default:
-          return <HomeIcon color={color} />;
+          return <HomeIcon color={color} isFocused={isFocused}/>;
       }
     };
 

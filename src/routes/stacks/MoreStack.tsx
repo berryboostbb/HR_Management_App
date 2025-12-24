@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import {Plan, Profile } from '@screens';
+import {Events, More, Payroll, Plan, Profile } from '@screens';
 
 const Stack = createStackNavigator();
 
@@ -11,7 +11,13 @@ const MoreStack = () => {
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="ProfileMainScreen" component={Profile} />
+      <Stack.Screen name="MoreMainScreen" component={More} />
+
+      <Stack.Screen name="Profile" component={Profile} />
+      <Stack.Screen name="Payroll" component={Payroll} />
+      <Stack.Screen name="Events" component={Events} />
+
+
      
     </Stack.Navigator>
   )

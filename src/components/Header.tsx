@@ -15,7 +15,7 @@ import { Avatar, CrossIcon, NotifyIcon, Search } from '@assets';
 import LinearGradient from 'react-native-linear-gradient';
 import { moderateScale as ms } from 'react-native-size-matters';
 import { navigate } from '@services';
-// import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { useSearch } from '@utils';
 
 const rs = ms;
@@ -30,7 +30,7 @@ const Header = ({ search = true }: Props) => {
 
   const colors = theme.colors;
   const styles = useStyles(colors);
-  // const { user } = useSelector((state: any) => state.user);
+  const { user } = useSelector((state: any) => state.user);
   const { searchActive, setSearchActive,setSearchText } =
     useSearch();
 
@@ -120,20 +120,20 @@ const Header = ({ search = true }: Props) => {
         <View style={styles.imgView}>
           <Image
             source={
-              // user?.image ? { uri: user?.image } :
+              user?.image ? { uri: user?.image } :
                Avatar}
             style={styles.image}
           />
         </View>
         <View>
           <AppText regular lineHeight={14}>
-            {/* {user?.name || 'Paul Walker'} */}Paul Walker'
+            {user?.name || 'Paul Walker'}
           </AppText>
           <AppText regular size={10} color={colors.primary} lineHeight={14}>
-            {/* {user?.adminId || 'MR-007'} */}MR-007
+            {user?.adminId || 'MR-007'}
           </AppText>
            <AppText regular size={10} color={colors.mediumGray} >
-            {/* {user?.distributor?.name} */}
+            {user?.distributor?.name}
           </AppText>
         </View>
       </Animated.View>

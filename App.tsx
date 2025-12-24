@@ -6,8 +6,11 @@ import {
   View,
 } from 'react-native';
 import React, { useEffect, useState } from 'react';
-import { BottomSheetProvider, defaultTheme } from '@utils';
+import { Alert, BottomSheetProvider, defaultTheme } from '@utils';
 import { EventRegister } from 'react-native-event-listeners';
+import { store } from '@redux';
+import { persistor } from './src/redux/store';
+
 import {
   getDataFromUserDefaults,
   navigationRef,
@@ -18,6 +21,9 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import Routes from './src/routes';
+import DropdownAlert from 'react-native-dropdownalert';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 const App = () => {
   const [isEnabledOne, setIsEnabledOne] = useState(false);
@@ -61,21 +67,43 @@ const App = () => {
 
   return (
     <PaperProvider theme={theme}>
-      <SafeAreaProvider>
-        <GestureHandlerRootView style={{ flex: 1 }}>
-          <NavigationContainer ref={navigationRef} theme={appTheme as any}>
-            <StatusBar
-              animated={true}
-              backgroundColor="transparent"
-              barStyle={'dark-content'}
-              translucent={true}
-            />
-            <BottomSheetProvider>
-              <Routes />
-            </BottomSheetProvider>
-          </NavigationContainer>
-        </GestureHandlerRootView>
-      </SafeAreaProvider>
+      <Provider store={store}>
+        <PersistGate persistor={persistor}>
+          <SafeAreaProvider>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <NavigationContainer ref={navigationRef} theme={appTheme as any}>
+                <StatusBar
+                  animated={true}
+                  backgroundColor="transparent"
+                  barStyle={'dark-content'}
+                  translucent={true}
+                />
+                <BottomSheetProvider>
+                  <Routes />
+                  <DropdownAlert
+                    alert={func => (Alert.alertObj = func)}
+                    dismissInterval={2000}
+                    successColor={'green'}
+                    errorColor={'red'}
+                    animatedViewStyle={{ height: '13.3%' }}
+                    safeViewStyle={{
+                      height:
+                        //  Platform.OS == 'ios' ? rv(80) :
+                        '100%',
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                    }}
+                    activeStatusBarStyle={'default'}
+                    inactiveStatusBarStyle={'default'}
+                    inactiveStatusBarBackgroundColor={'#fff'}
+                    updateStatusBar={false}
+                  />
+                </BottomSheetProvider>
+              </NavigationContainer>
+            </GestureHandlerRootView>
+          </SafeAreaProvider>
+        </PersistGate>
+      </Provider>
     </PaperProvider>
   );
 };

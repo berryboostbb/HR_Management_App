@@ -82,7 +82,7 @@ export default function CustomModal({
           >
             {!bottom && (
               <GestureDetector gesture={gesture}>
-                <View style={{ height: rs(32), paddingTop: rs(8) }}>
+                <View style={{ paddingTop: rs(8) }}>
                   <View style={styles.notch} />
                 </View>
               </GestureDetector>

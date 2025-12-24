@@ -39,8 +39,8 @@
       "@utils": ["src/utils"],
       "@components": ["src/components"],
       "@assets": ["src/assets"],
-      "@services": ["src/services"]
-      // "@redux": ["src/redux"],
+      "@services": ["src/services"],
+      "@redux": ["src/redux"],
       // "@api": ["src/api"],
       // "@theme": ["src/shared/theme"],
     }

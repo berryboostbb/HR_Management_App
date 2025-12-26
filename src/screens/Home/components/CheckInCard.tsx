@@ -7,9 +7,10 @@ import { Break } from '@assets';
 
 interface Props {
   onPressCheckIn?: any;
+  loading?: any;
 }
 
-const CheckInCard = ({ onPressCheckIn }: Props) => {
+const CheckInCard = ({ onPressCheckIn,loading }: Props) => {
   const { colors }: any = useTheme();
   const styles = useStyles(colors);
   return (
@@ -27,13 +28,14 @@ const CheckInCard = ({ onPressCheckIn }: Props) => {
 
       <View style={styles.row}>
         <TouchableOpacity style={styles.breakButton}>
-        <Break height={rs(16)} width={rs(16)}/>
+          <Break height={rs(16)} width={rs(16)} />
 
           <AppText size={10} regular color={colors.primary}>
             Take A Break
           </AppText>
         </TouchableOpacity>
         <PrimaryButton
+          loading={loading}
           onPress={onPressCheckIn}
           title="Check-in"
           width={rs(120)}
@@ -62,22 +64,21 @@ const useStyles = (colors: any) =>
     },
     breakButton: {
       height: rs(40),
-      position:"absolute",
-      left:0,
-      width: "60%",
+      position: 'absolute',
+      left: 0,
+      width: '60%',
       borderWidth: 1,
       borderColor: colors.primary,
       backgroundColor: colors.white,
       borderRadius: rs(6),
-      alignItems:"center",
-      justifyContent:"center",
-      flexDirection:"row",
-      gap:rs(8)
+      alignItems: 'center',
+      justifyContent: 'center',
+      flexDirection: 'row',
+      gap: rs(8),
     },
-    row:{
-      alignItems:"center",
+    row: {
+      alignItems: 'center',
       marginTop: rs(30),
-      width:"100%",
-
-    }
+      width: '100%',
+    },
   });

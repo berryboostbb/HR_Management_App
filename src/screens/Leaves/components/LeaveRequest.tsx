@@ -5,10 +5,12 @@ import { useTheme } from '@react-navigation/native';
 import { rs } from '@utils';
 import ReasonCard from './ReasonCard';
 
-const LeaveRequest = ({item}:any) => {
+const LeaveRequest = ({ data }: any) => {
   return (
-    <Card title="Leave Request" >
-      <ReasonCard item={item}/>
+    <Card title="Leave Request">
+      {data?.map((item: any, index: any) => (
+        <ReasonCard key={index} item={item} />
+      ))}
     </Card>
   );
 };

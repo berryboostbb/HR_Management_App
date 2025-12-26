@@ -6,7 +6,7 @@
  * @param date - The Date object to format
  * @returns Formatted date string
  */
-export const formatDate = (date: Date): string => {
+export const formatDate = (date:any) => {
   if (!date || !(date instanceof Date)) return '';
 
   const day = date.getDate();

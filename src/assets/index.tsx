@@ -16,7 +16,6 @@ export const LogoV1 = require('./images/LogoV1.png');
 export const HR_Logo = require('./images/logo.png');
 export const Event_Img = require('./images/eventImage.jpg');
 
-
 export const HomeIcon = ({ color, isFocused }: any) => {
   return (
     <Svg
@@ -540,7 +539,7 @@ export const ForwardArrow = () => {
   );
 };
 
-export const CalenderIcon2 = ({size = 16}:any) => {
+export const CalenderIcon2 = ({ size = 16 }: any) => {
   return (
     <Svg
       width={size}
@@ -634,6 +633,52 @@ export const DatePickerIcon = () => {
         clip-rule="evenodd"
         d="M5.5 4.5C5.5 4.30109 5.57902 4.11032 5.71967 3.96967C5.86032 3.82902 6.05109 3.75 6.25 3.75H9.25C9.44891 3.75 9.63968 3.82902 9.78033 3.96967C9.92098 4.11032 10 4.30109 10 4.5C10 4.69891 9.92098 4.88968 9.78033 5.03033C9.63968 5.17098 9.44891 5.25 9.25 5.25H6.25C6.05109 5.25 5.86032 5.17098 5.71967 5.03033C5.57902 4.88968 5.5 4.69891 5.5 4.5Z"
         fill="#7D7D7D"
+      />
+    </Svg>
+  );
+};
+
+export const Caution = () => {
+  return (
+    <Svg
+      width="64"
+      height="64"
+      viewBox="0 0 64 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        fill-rule="evenodd"
+        clip-rule="evenodd"
+        d="M31.6667 63.3333C14.1772 63.3333 0 49.1562 0 31.6667C0 14.1772 14.1772 0 31.6667 0C49.1562 0 63.3333 14.1772 63.3333 31.6667C63.3333 49.1562 49.1562 63.3333 31.6667 63.3333ZM29.2505 13.0973L29.5988 37.1513H33.7313L34.0797 13.0973H29.2505ZM31.654 47.8262C33.2753 47.8262 34.5103 46.6133 34.5103 45.0332C34.5103 43.4498 33.2753 42.2402 31.654 42.2402C31.2833 42.2334 30.9149 42.3007 30.5705 42.4381C30.2262 42.5756 29.9127 42.7803 29.6484 43.0404C29.3842 43.3006 29.1745 43.6108 29.0317 43.953C28.8889 44.2951 28.8158 44.6624 28.8167 45.0332C28.8167 46.6133 30.0707 47.8262 31.654 47.8262Z"
+        fill="#E90761"
+      />
+    </Svg>
+  );
+};
+
+export const CharmTick = () => {
+  return (
+    <Svg
+      width="76"
+      height="76"
+      viewBox="0 0 76 76"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <Path
+        d="M67.6879 41.566C65.3129 53.441 56.3596 64.6207 43.7921 67.1205C31.2247 69.6205 18.4715 63.7746 12.1617 52.6221C5.85199 41.4699 7.4097 27.5275 16.0252 18.0426C24.6407 8.5577 39.1879 5.94102 51.0629 10.691"
+        stroke="#34C759"
+        strokeWidth="4.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <Path
+        d="M27.3125 36.8125L39.1875 48.6875L67.6875 17.8125"
+        stroke="#34C759"
+        strokeWidth="4.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </Svg>
   );

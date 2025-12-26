@@ -34,6 +34,28 @@ export const userApi = baseApi.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
+     checkLocation: builder.mutation<any, { body: any }>({
+      query: ({ body }) => ({
+        url: '/attendance/checkin',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ["CheckIn"],
+    }),
+
+     applyleve: builder.mutation<any, { body: any }>({
+      query: ({ body }) => ({
+        url: '/leave/apply',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ["Leaves"],
+    }),
+     getAllleaves: builder.query<any[], { id?: string }>({
+      query: ({ id }) => `/leave/employee/${id}`,
+      providesTags: ['Leaves'],
+    }),
+
 
   }),
 });
@@ -41,4 +63,7 @@ export const userApi = baseApi.injectEndpoints({
 export const {
   useUpdateUserMutation,
   useUploadFileMutation,
+  useCheckLocationMutation,
+  useApplyleveMutation,
+  useGetAllleavesQuery
 } = userApi;

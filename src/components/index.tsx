@@ -10,6 +10,8 @@ export { default as ModalHeader } from './ModalHeader';
 export { default as ModalFooter } from './ModalFooter';
 export { default as DropDownData } from './DropDownData';
 export { default as SearchInput } from './SearchInput';
+export { default as CenteredModal } from './CenteredModal';
+
 
 
 

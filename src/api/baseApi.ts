@@ -7,6 +7,8 @@ export const baseApi = createApi({
   tagTypes: [
     'Auth',
     'User',
+    'CheckIn',
+    "Leaves"
   ],
   endpoints: () => ({}),
 });

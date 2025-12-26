@@ -8,7 +8,7 @@ import { ChangePassword, EditIcon, Logout, Settings } from "@assets";
   ];
 
   export const SelectType = [
-  { name: 'Annual' },
-  { name: 'Casual' },
+  { name: 'Annual Leave' },
+  { name: 'Casual Leave' },
   { name: 'Sick Leave' },
 ];

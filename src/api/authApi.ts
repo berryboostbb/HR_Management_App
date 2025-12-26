@@ -5,19 +5,19 @@ export const authApi = baseApi.injectEndpoints({
     // 🔹 Login API (POST)
     login: builder.mutation({
       query: (body) => ({
-        url: '/admin/login',
+        url: '/auth/login',
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Auth'],
+      // invalidatesTags: ['Auth'],
     }),
       logout: builder.mutation<void, void>({
       query: () => ({
-        url: '/admin/logout',
+        url: '/auth/logout',
         method: 'POST',
         // ✅ Bearer token is automatically sent via baseQueryWithInterceptor
       }),
-      invalidatesTags: ['Auth'],
+      // invalidatesTags: ['Auth'],
     }),
   }),
 });

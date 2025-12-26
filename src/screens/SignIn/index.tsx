@@ -47,13 +47,11 @@ const SignIn = () => {
           email: values.email,
           password: values.password,
         }).unwrap();
-        isLoading === false &&
-          setTimeout(() => {
-            dispatch(setUser(result?.admin));
-            dispatch(setToken(result.token));
-            dispatch(setIsLoggedIn(true));
-            // Alert.showSuccess('Loggin Successful!');
-          }, 300);
+        console.log("🚀 ~ SignIn ~ result:", result)
+        await dispatch(setUser(result?.user));
+        await dispatch(setToken(result.token));
+        await dispatch(setIsLoggedIn(true));
+        // Alert.showSuccess('Loggin Successful!');
       } catch (err) {
         console.warn('Login failed:', err);
       }
@@ -78,9 +76,10 @@ const SignIn = () => {
         lineHeight={rs(32)}
         style={{
           backgroundColor: '#11BAB0',
-          width:rs(230),alignSelf:"center",
-          marginBottom:rs(24),
-          letterSpacing:-0.25
+          width: rs(230),
+          alignSelf: 'center',
+          marginBottom: rs(24),
+          letterSpacing: -0.25,
         }}
       >
         Management

@@ -9,7 +9,7 @@ import { logout, RootState } from '@redux';
 import { Alert } from '@utils';
 
 const rawBaseQuery = fetchBaseQuery({
-  baseUrl: 'https://medi-rep-back-end.vercel.app',
+  baseUrl: 'https://hr-management-backend-beta.vercel.app/',
   prepareHeaders: (headers, { getState }) => {
     const token = (getState() as RootState)?.user?.token;
     if (token) headers.set('Authorization', `Bearer ${token}`);

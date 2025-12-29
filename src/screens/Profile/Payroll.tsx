@@ -1,15 +1,27 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useSyncExternalStore } from 'react';
 import { AppText, Wrapper } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { rs } from '@utils';
-import {  DatePickerIcon } from '@assets';
+import { DatePickerIcon } from '@assets';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { formatDate } from '@services';
+import { useGetPayrollQuery } from '../../../src/api/userApi';
+import { useSelector } from 'react-redux';
 
 const Payroll = () => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
+  const { user } = useSelector((state: any) => state?.user);
+
+  const { data, isLoading }: any = useGetPayrollQuery({ id: user?._id });
+  console.log('🚀 ~ Payroll ~ data:', data);
 
   const onChange = (event: any, selectedDate: any) => {
     if (event.type === 'set' && selectedDate) {
@@ -28,6 +40,13 @@ const Payroll = () => {
     });
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size={'large'} color={colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <Wrapper search={false}>
@@ -37,7 +56,7 @@ const Payroll = () => {
         </TouchableOpacity>
         <AppText medium>Salary</AppText>
         <AppText regular color={colors.mediumGray}>
-          Current net salary as of <AppText medium>Nov 2025</AppText>
+          Current net salary as of <AppText medium>{data?.month} {data?.year}</AppText>
         </AppText>
         <AppText size={16} bold style={styles.amountView}>
           Rs{' '}
@@ -100,7 +119,7 @@ const useStyles = (colors: any) =>
       borderRadius: rs(6),
       backgroundColor: colors.cloudWhite,
       position: 'absolute',
-      zIndex:1,
+      zIndex: 1,
       right: rs(12),
       top: rs(12),
       justifyContent: 'center',

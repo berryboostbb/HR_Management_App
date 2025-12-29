@@ -1,11 +1,10 @@
 import { Dimensions, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
-import { AppText, BulletText, Card } from '@components';
-import { useTheme } from '@react-navigation/native';
-import { rs } from '@utils';
+import { Card } from '@components';
 import ReasonCard from './ReasonCard';
 
 const LeaveRequest = ({ data }: any) => {
+  console.log("🚀 ~ LeaveRequest ~ data:", data)
   return (
     <Card title="Leave Request">
       {data?.map((item: any, index: any) => (

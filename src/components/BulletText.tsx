@@ -7,10 +7,22 @@ import { useTheme } from '@react-navigation/native';
 const BulletText = ({ size = 4, title, bulletColor, titleColor }: any) => {
   const { colors } = useTheme();
 
-  const BULLET_COLOR = title === "Casual"? colors.yellow : title === "Sick Leave"? colors.red : bulletColor
-  const TEXT_COLOR = title === "Casual"? colors.yellow : title === "Sick Leave"? colors.red : titleColor
-
-
+  const BULLET_COLOR =
+    title === 'Casual Leave'
+      ? colors.yellow
+      : title === 'Sick Leave'
+      ? colors.red
+      : title === 'Annual Leave'
+      ? colors.green
+      : bulletColor;
+  const TEXT_COLOR =
+    title === 'Casual Leave'
+      ? colors.yellow
+      : title === 'Sick Leave'
+      ? colors.red
+      : title === 'Annual Leave'
+      ? colors.green
+      : titleColor;
 
   return (
     <View style={styles.row}>

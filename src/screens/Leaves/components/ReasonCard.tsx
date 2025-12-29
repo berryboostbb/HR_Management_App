@@ -3,10 +3,8 @@ import React from 'react';
 import { AppText, BulletText } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { rs } from '@utils';
-import { formatDate } from '@services';
 
 const ReasonCard = ({ item }: any) => {
-  console.log('🚀 ~ ReasonCard ~ item:..', item);
   const { colors } = useTheme();
   const styles = useStyles(colors);
   const TEXT_COLOR =
@@ -15,9 +13,16 @@ const ReasonCard = ({ item }: any) => {
       : item?.status === 'Approved'
       ? colors.green
       : colors.green;
-      const dateFormat=formatDate("2025-12-26T19:00:00.000Z")
-      // console.log("🚀 ~ ReasonCard ~ dateFormat:", dateFormat)
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+  };
   return (
     <View style={styles.borderView}>
       <View style={styles.row}>
@@ -31,14 +36,14 @@ const ReasonCard = ({ item }: any) => {
         </AppText>
 
         <AppText size={11} medium style={{ marginLeft: rs(12) }}>
-          Jan 03, 2026
+          {formatDate(item?.startDate)}
           {/* {item?.startDate} */}
         </AppText>
         <AppText size={11} medium color={colors.mediumGray}>
           to
         </AppText>
         <AppText size={11} medium>
-          Jan 03, 2026
+          {formatDate(item?.endDate)}
         </AppText>
       </View>
       <View style={styles.reason}>

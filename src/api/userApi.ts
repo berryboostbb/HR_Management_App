@@ -34,29 +34,31 @@ export const userApi = baseApi.injectEndpoints({
       invalidatesTags: ['User'],
     }),
 
-     checkLocation: builder.mutation<any, { body: any }>({
+    checkLocation: builder.mutation<any, { body: any }>({
       query: ({ body }) => ({
         url: '/attendance/checkin',
         method: 'POST',
         body: body,
       }),
-      invalidatesTags: ["CheckIn"],
+      invalidatesTags: ['CheckIn'],
     }),
 
-     applyleve: builder.mutation<any, { body: any }>({
+    applyleve: builder.mutation<any, { body: any }>({
       query: ({ body }) => ({
         url: '/leave/apply',
         method: 'POST',
         body: body,
       }),
-      invalidatesTags: ["Leaves"],
+      invalidatesTags: ['Leaves'],
     }),
-     getAllleaves: builder.query<any[], { id?: string }>({
+    getAllleaves: builder.query<any[], { id?: string }>({
       query: ({ id }) => `/leave/employee/${id}`,
       providesTags: ['Leaves'],
     }),
 
-
+    getPayroll: builder.query({
+      query: ({ id }) => `/payroll/employee/${id}`,
+    }),
   }),
 });
 
@@ -65,5 +67,6 @@ export const {
   useUploadFileMutation,
   useCheckLocationMutation,
   useApplyleveMutation,
-  useGetAllleavesQuery
+  useGetAllleavesQuery,
+  useGetPayrollQuery
 } = userApi;

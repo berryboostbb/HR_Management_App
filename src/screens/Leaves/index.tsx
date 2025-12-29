@@ -28,7 +28,7 @@ const Leaves = () => {
   };
 
   return (
-    <Wrapper absoluteView={<AddButton onPress={onPressAdd} />}>
+    <Wrapper search={false} absoluteView={<AddButton onPress={onPressAdd} />}>
       <LeavesCard />
       <LeaveRequest data={data} />
       {/* <LeaveHistory data={LeaveHistoryData} /> */}

@@ -1,11 +1,42 @@
-import { StyleSheet, Text, View } from 'react-native';
-import React from 'react';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useState } from 'react';
 import { AppText, Card } from '@components';
 import { rs } from '@utils';
+import MonthPicker from 'react-native-month-year-picker';
 
 const AttendanceSummary = () => {
+  const [date, setDate] = useState(new Date());
+  const [show, setShow] = useState(false);
+
+  const showPicker = useCallback(value => setShow(value), []);
+
+  const onValueChange = useCallback(
+    (event, newDate) => {
+      const selectedDate = newDate || date;
+
+      showPicker(false);
+      setDate(selectedDate);
+    },
+    [date, showPicker],
+  );
+
   return (
     <Card title="Attendance Summary">
+      <Pressable
+        onPress={() => showPicker(true)}
+        style={{
+          backgroundColor: '#fff',
+          elevation: 2,
+          position: 'absolute',
+          right: rs(12),
+          top: rs(12),
+          paddingHorizontal: rs(8),
+          paddingVertical: rs(4),
+          borderRadius: rs(4),
+        }}
+      >
+        <AppText>Dec 2025</AppText>
+      </Pressable>
       <View style={styles.row}>
         <View style={[styles.summaryCard, { backgroundColor: '#34C7591F' }]}>
           <AppText size={16} medium color={'#34C759'}>
@@ -32,6 +63,15 @@ const AttendanceSummary = () => {
           </AppText>
         </View>
       </View>
+      {show && (
+        <MonthPicker
+          onChange={onValueChange}
+          value={date}
+          minimumDate={new Date()}
+          maximumDate={new Date(2025, 5)}
+          locale="ko"
+        />
+      )}
     </Card>
   );
 };

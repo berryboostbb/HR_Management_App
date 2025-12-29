@@ -95,7 +95,7 @@ const Home = () => {
   };
 
   return (
-    <Wrapper>
+    <Wrapper search={false}>
       <CheckInCard
         loading={locationFetch}
         onPressCheckIn={handleGetLocationUltraFast}

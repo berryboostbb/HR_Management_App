@@ -16,6 +16,7 @@ const Events = () => {
   const [active, setActive] = useState('upcoming');
   return (
     <Wrapper
+    search={false}
     >
           <View style={styles.row}>
             <TouchableOpacity

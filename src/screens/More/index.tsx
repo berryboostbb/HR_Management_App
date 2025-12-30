@@ -21,12 +21,6 @@ const data = [
     screen: 'Payroll',
   },
   {
-    img: Events,
-    title: 'Events',
-    desc: 'Get your all reports in excel and PDF',
-    screen: 'Events',
-  },
-  {
     img: Profile,
     title: 'Profile',
     desc: 'Set up your profile, complete it',

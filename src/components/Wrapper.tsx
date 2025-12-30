@@ -40,7 +40,7 @@ interface Props extends TouchableOpacityProps {
 const Wrapper = (props: Props) => {
   const theme: any = useTheme();
   const colors = theme.colors;
-  const { searchActive, setSearchActive } = useSearch();
+  // const { searchActive, setSearchActive } = useSearch();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -53,21 +53,21 @@ const Wrapper = (props: Props) => {
     }
   };
 
-  useEffect(() => {
-    const backAction = () => {
-      if (searchActive) {
-        setSearchActive(false);
-        return true;
-      }
-      return false;
-    };
+  // useEffect(() => {
+  //   const backAction = () => {
+  //     if (searchActive) {
+  //       setSearchActive(false);
+  //       return true;
+  //     }
+  //     return false;
+  //   };
 
-    const backHandler = BackHandler.addEventListener(
-      'hardwareBackPress',
-      backAction,
-    );
-    return () => backHandler.remove();
-  }, [searchActive, setSearchActive]);
+  //   const backHandler = BackHandler.addEventListener(
+  //     'hardwareBackPress',
+  //     backAction,
+  //   );
+  //   return () => backHandler.remove();
+  // }, [searchActive, setSearchActive]);
 
   return (
     <View

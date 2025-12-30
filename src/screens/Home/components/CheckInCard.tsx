@@ -1,43 +1,141 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import React from 'react';
-import { AppText, Card, PrimaryButton } from '@components';
+import {
+  ActivityIndicator,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { AppText, Card, CenteredModal, PrimaryButton } from '@components';
 import { useTheme } from '@react-navigation/native';
-import { rs } from '@utils';
+import { rs, useBottomSheet } from '@utils';
 import { Break } from '@assets';
+import { useSelector } from 'react-redux';
+import TimerText from './TimerText';
+import TakeBreak from './TakeBreak';
+import { useStartBreakMutation } from '../../../../src/api/userApi';
+import BreakModalContent from './BreakModalContent';
 
 interface Props {
   onPressCheckIn?: any;
   loading?: any;
+  checkedInData?: any;
+  isLoading?: any;
+  onStartBreak?: any;
 }
 
-const CheckInCard = ({ onPressCheckIn,loading }: Props) => {
+const CheckInCard = ({
+  onPressCheckIn,
+  loading,
+  checkedInData,
+  isLoading,
+  onStartBreak,
+}: Props) => {
+  console.log('🚀 ~ CheckInCard ~ checkedInData:', checkedInData);
   const { colors }: any = useTheme();
   const styles = useStyles(colors);
+  const { user } = useSelector((state: any) => state.user);
+  const { showBottomSheet } = useBottomSheet();
+
+  const getTodayDateWithDay = () => {
+    const today = new Date();
+
+    const datePart = today.toLocaleDateString('en-US', {
+      month: 'short',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
+    const dayPart = today.toLocaleDateString('en-US', {
+      weekday: 'long',
+    });
+
+    return `${datePart} - ${dayPart}`;
+  };
+
+  const breakAvailed =
+    checkedInData?.breakStatus?.endTime && checkedInData?.breakStatus?.startTime
+      ? true
+      : false;
+
   return (
     <Card
       marginTop={0}
       title={'Good Morning'}
-      title2="Office Staff"
-      date="Dec 22,2025 - Monday"
+      title2={user.employeeType}
+      date={getTodayDateWithDay()}
     >
-      <View style={styles.circle}>
-        <AppText size={18} bold color={colors.white}>
-          00:00:00
-        </AppText>
-      </View>
+      {checkedInData?.checkInStatus === 'OnBreak' ? (
+        <TakeBreak
+          checkInTime={checkedInData?.breakStatus?.startTime}
+          isCheckedIn={checkedInData?.checkInStatus === 'OnBreak'}
+          color={colors.white}
+        />
+      ) : (
+        <View style={styles.circle}>
+          {isLoading ? (
+            <ActivityIndicator size={50} color={colors.white} />
+          ) : (
+            <TimerText
+              checkInTime={checkedInData?.checkInTime}
+              isCheckedIn={checkedInData?.checkInStatus === 'CheckedIn'}
+              color={colors.white}
+            />
+          )}
+        </View>
+      )}
 
       <View style={styles.row}>
-        <TouchableOpacity style={styles.breakButton}>
-          <Break height={rs(16)} width={rs(16)} />
+        {checkedInData?.checkInStatus === 'CheckedIn' ||
+        checkedInData?.checkInStatus === 'OnBreak' ? (
+          <TouchableOpacity
+            disabled={breakAvailed}
+            onPress={() =>
+              showBottomSheet(
+                <CenteredModal
+                  button2_title={'Start'}
+                  onPressBtn={onStartBreak}
+                  renderContent={
+                    <BreakModalContent
+                      breakTime="Brake time 00h:00m"
+                      title={
+                        checkedInData?.checkInStatus === 'OnBreak'
+                          ? 'Are you sure to take a \n brake?'
+                          : 'Are you sure you want to end a \n brake?'
+                      }
+                    />
+                  }
+                />,
+                { centerLayout: true },
+              )
+            }
+            style={styles.breakButton}
+          >
+            <Break height={rs(16)} width={rs(16)} />
 
-          <AppText size={10} regular color={colors.primary}>
-            Take A Break
-          </AppText>
-        </TouchableOpacity>
+            <AppText
+              size={10}
+              regular
+              color={breakAvailed ? colors.mediumGray : colors.primary}
+            >
+              {checkedInData?.checkInStatus === 'OnBreak'
+                ? 'End'
+                : breakAvailed
+                ? 'Break Already Availed'
+                : 'Take A Break'}
+            </AppText>
+          </TouchableOpacity>
+        ) : null}
         <PrimaryButton
           loading={loading}
+          disabled={checkedInData?.checkInStatus === 'OnBreak' ? true : false}
           onPress={onPressCheckIn}
-          title="Check-in"
+          title={
+            checkedInData?.checkInStatus === 'CheckedIn' ||
+            checkedInData?.checkInStatus === 'OnBreak'
+              ? 'Check-out'
+              : 'Check-in'
+          }
           width={rs(120)}
           style={styles.button}
         />
@@ -51,8 +149,8 @@ export default CheckInCard;
 const useStyles = (colors: any) =>
   StyleSheet.create({
     circle: {
-      height: rs(116),
-      width: rs(116),
+      height: rs(120),
+      width: rs(120),
       borderRadius: 100,
       backgroundColor: colors.primary,
       alignSelf: 'center',

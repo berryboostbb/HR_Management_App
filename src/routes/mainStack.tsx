@@ -7,10 +7,10 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { rs, rv, SearchProvider, useSearch } from '@utils';
 import { AppText } from '@components';
 import HomeStack from './stacks/HomeStack';
-import PlanStack from './stacks/PlanStack';
 import LeavesStack from './stacks/LeavesStack';
-import { HomeIcon, LeavesIcon, MoreIcon, PlanIcon } from '@assets';
+import { EventsTab, HomeIcon, LeavesIcon, MoreIcon, PlanIcon } from '@assets';
 import MoreStack from './stacks/MoreStack';
+import EventStack from './stacks/PlanStack';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -28,7 +28,7 @@ function MyTabs() {
       tabBar={(props: any) => <CustomTabBar {...props} />}
     >
       <Tab.Screen name="Home" component={HomeStack} />
-      <Tab.Screen name="Plan" component={PlanStack} />
+      <Tab.Screen name="Events" component={EventStack} />
       <Tab.Screen name="Leaves" component={LeavesStack} />
       <Tab.Screen name="More" component={MoreStack} />
     </Tab.Navigator>
@@ -55,8 +55,8 @@ const CustomTabBar = React.memo(
       switch (routeName) {
         case 'Home':
           return <HomeIcon color={color} isFocused={isFocused} />;
-        case 'Plan':
-          return <PlanIcon color={color} isFocused={isFocused}/>;
+        case 'Events':
+          return <EventsTab color={color} isFocused={isFocused}/>;
         case 'Leaves':
           return <LeavesIcon color={color} isFocused={isFocused}/>;
         case 'More':

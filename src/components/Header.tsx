@@ -31,81 +31,81 @@ const Header = ({ search = true }: Props) => {
   const colors = theme.colors;
   const styles = useStyles(colors);
   const { user } = useSelector((state: any) => state.user);
-  const { searchActive, setSearchActive,setSearchText } =
-    useSearch();
+  // const { searchActive, setSearchActive,setSearchText } =
+  //   useSearch();
 
-  const animatedWidth = useRef(new Animated.Value(rs(48))).current;
-  const slideAnim = useRef(new Animated.Value(0)).current;
-  const crossOpacity = useRef(new Animated.Value(0)).current;
-  const inputOpacity = useRef(new Animated.Value(0)).current;
-  const inputRef = useRef<TextInput>(null);
+  // const animatedWidth = useRef(new Animated.Value(rs(48))).current;
+  // const slideAnim = useRef(new Animated.Value(0)).current;
+  // const crossOpacity = useRef(new Animated.Value(0)).current;
+  // const inputOpacity = useRef(new Animated.Value(0)).current;
+  // const inputRef = useRef<TextInput>(null);
   
-  useEffect(() => {
-    if (searchActive) {
-      inputRef.current?.focus();
-      // OPEN — first animate width + slide, then show input
-      Animated.parallel([
-        Animated.timing(animatedWidth, {
-          toValue: SCREEN_WIDTH * 0.777,
-          duration: 350,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: false,
-        }),
-        Animated.timing(slideAnim, {
-          toValue: -SCREEN_WIDTH * 0.77,
-          duration: 350,
-          easing: Easing.inOut(Easing.ease),
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        Animated.parallel([
-          Animated.timing(inputOpacity, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-          Animated.timing(crossOpacity, {
-            toValue: 1,
-            duration: 200,
-            useNativeDriver: true,
-          }),
-        ]).start();
-      });
-    } else {
-      // CLOSE — first hide input
-      inputRef.current?.blur();
+  // useEffect(() => {
+  //   if (searchActive) {
+  //     inputRef.current?.focus();
+  //     // OPEN — first animate width + slide, then show input
+  //     Animated.parallel([
+  //       Animated.timing(animatedWidth, {
+  //         toValue: SCREEN_WIDTH * 0.777,
+  //         duration: 350,
+  //         easing: Easing.inOut(Easing.ease),
+  //         useNativeDriver: false,
+  //       }),
+  //       Animated.timing(slideAnim, {
+  //         toValue: -SCREEN_WIDTH * 0.77,
+  //         duration: 350,
+  //         easing: Easing.inOut(Easing.ease),
+  //         useNativeDriver: true,
+  //       }),
+  //     ]).start(() => {
+  //       Animated.parallel([
+  //         Animated.timing(inputOpacity, {
+  //           toValue: 1,
+  //           duration: 200,
+  //           useNativeDriver: true,
+  //         }),
+  //         Animated.timing(crossOpacity, {
+  //           toValue: 1,
+  //           duration: 200,
+  //           useNativeDriver: true,
+  //         }),
+  //       ]).start();
+  //     });
+  //   } else {
+  //     // CLOSE — first hide input
+  //     inputRef.current?.blur();
 
-      Animated.parallel([
-        Animated.timing(inputOpacity, {
-          toValue: 0,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-        Animated.timing(crossOpacity, {
-          toValue: 0,
-          duration: 150,
-          useNativeDriver: true,
-        }),
-      ]).start(() => {
-        // then collapse
-        Animated.parallel([
-          Animated.timing(animatedWidth, {
-            toValue: rs(48),
-            duration: 350,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: false,
-          }),
-          Animated.timing(slideAnim, {
-            toValue: 0,
-            duration: 350,
-            easing: Easing.inOut(Easing.ease),
-            useNativeDriver: true,
-          }),
-        ]).start();
-      });
-      inputRef.current?.clear();
-    }
-  }, [searchActive]);
+  //     Animated.parallel([
+  //       Animated.timing(inputOpacity, {
+  //         toValue: 0,
+  //         duration: 150,
+  //         useNativeDriver: true,
+  //       }),
+  //       Animated.timing(crossOpacity, {
+  //         toValue: 0,
+  //         duration: 150,
+  //         useNativeDriver: true,
+  //       }),
+  //     ]).start(() => {
+  //       // then collapse
+  //       Animated.parallel([
+  //         Animated.timing(animatedWidth, {
+  //           toValue: rs(48),
+  //           duration: 350,
+  //           easing: Easing.inOut(Easing.ease),
+  //           useNativeDriver: false,
+  //         }),
+  //         Animated.timing(slideAnim, {
+  //           toValue: 0,
+  //           duration: 350,
+  //           easing: Easing.inOut(Easing.ease),
+  //           useNativeDriver: true,
+  //         }),
+  //       ]).start();
+  //     });
+  //     inputRef.current?.clear();
+  //   }
+  // }, [searchActive]);
 
   return (
     <View style={styles.header}>
@@ -114,7 +114,7 @@ const Header = ({ search = true }: Props) => {
         style={{
           flexDirection: 'row',
           alignItems: 'center',
-          transform: [{ translateX: slideAnim }],
+          // transform: [{ translateX: slideAnim }],
         }}
       >
         <View style={styles.imgView}>
@@ -139,16 +139,16 @@ const Header = ({ search = true }: Props) => {
       </Animated.View>
 
       <View style={styles.absolutebtn}>
-        {search && (
+        {/* {search && (
           <Animated.View
             style={[
               styles.searchView,
               {
                 height: rs(48),
-                width: animatedWidth,
+                // width: animatedWidth,
                 flexDirection: 'row',
                 paddingHorizontal: rs(12),
-                justifyContent: searchActive ? 'space-between' : 'center',
+                justifyContent:  'center',
               },
             ]}
           >
@@ -159,12 +159,10 @@ const Header = ({ search = true }: Props) => {
                 flexDirection: 'row',
                 alignItems: 'center',
                 flex: 1,
-                // backgroundColor:"red",
                 justifyContent: 'center',
               }}
             >
               <Search />
-              {/* Always mounted, just animated opacity */}
               <Animated.View
                 style={{
                   flex: 1,
@@ -178,14 +176,12 @@ const Header = ({ search = true }: Props) => {
                   style={{
                     flex: 1,
                     color: colors.black,
-                    // backgroundColor:"red"
                   }}
                   placeholder="Search"
                   placeholderTextColor={colors.mediumGray}
                 />
               </Animated.View>
 
-              {/* Cross icon fade */}
               <Animated.View
                 style={{
                   position: 'absolute',
@@ -197,7 +193,7 @@ const Header = ({ search = true }: Props) => {
               </Animated.View>
             </Pressable>
           </Animated.View>
-        )}
+        )} */}
 
         <Pressable onPress={() => navigate('Notification')}>
           <LinearGradient

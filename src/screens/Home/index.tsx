@@ -1,21 +1,39 @@
 import { StyleSheet, Text, View, Alert as RNAlert } from 'react-native';
-import React, { useState } from 'react';
-import { Wrapper } from '@components';
+import React, { useEffect, useState } from 'react';
+import { CenteredModal, Wrapper } from '@components';
 import CheckInCard from './components/CheckInCard';
 import AttendanceSummary from './components/AttendanceSummary';
 import LeaveSummary from './components/LeaveSummary';
-import { useCheckLocationMutation } from '../../../src/api/userApi';
+import {
+  useCheckLocationMutation,
+  useEndBreakMutation,
+  useGetAttendanceStatusQuery,
+  useStartBreakMutation,
+} from '../../../src/api/userApi';
 import Geolocation from '@react-native-community/geolocation';
 import { useDispatch, useSelector } from 'react-redux';
-import { Alert, requestLocationPermission } from '@utils';
+import { Alert, requestLocationPermission, useBottomSheet } from '@utils';
 import { setLocation } from '@redux';
+import Geocoder from 'react-native-geocoding';
+import CheckoutModalContent from './components/CheckoutModalContent';
+
+// Geocoder.init('AIzaSyDJHbyzr2h98h5zx6R9AHY0NnYKAcGq184');
 
 const Home = () => {
   const dispatch = useDispatch();
+  const { data, refetch, isLoading }: any = useGetAttendanceStatusQuery();
+  const [startBreak] = useStartBreakMutation();
+  const [endBreak] = useEndBreakMutation();
 
   const [checkLocation] = useCheckLocationMutation();
   const [locationFetch, setFetchLocation] = useState(false);
-  const { user } = useSelector((state: any) => state.user);
+  const { user, token } = useSelector((state: any) => state.user);
+  const { showBottomSheet, hideBottomSheet } = useBottomSheet();
+  console.log('🚀 ~ navigateToReport ~ token:', data);
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const getFreshLocation = () => {
     return new Promise((resolve, reject) => {
@@ -38,60 +56,94 @@ const Home = () => {
     });
   };
 
+  const handleChekout = () => {};
+
   const handleGetLocationUltraFast = async () => {
-    try {
-      setFetchLocation(true);
+    if (
+      data?.data?.checkInStatus === 'CheckedIn' ||
+      data?.data?.checkInStatus === 'OnBreak'
+    ) {
+      showBottomSheet(
+        <CenteredModal
+          onPressBtn={handleChekout}
+          renderContent={<CheckoutModalContent />}
+        />,
+        { centerLayout: true },
+      );
+    } else {
+      try {
+        setFetchLocation(true);
 
-      const hasPermission = await requestLocationPermission();
-      if (!hasPermission) {
-        RNAlert.alert('Permission Required', 'Enable location to continue.');
-        return;
+        const hasPermission = await requestLocationPermission();
+        if (!hasPermission) {
+          RNAlert.alert('Permission Required', 'Enable location to continue.');
+          return;
+        }
+        const freshLocation: any = await getFreshLocation();
+
+        dispatch(
+          setLocation({
+            latitude: Number(freshLocation.latitude.toFixed(4)),
+            longitude: Number(freshLocation.longitude.toFixed(4)),
+          }),
+        );
+        navigateToReport(
+          Number(freshLocation.latitude.toFixed(4)),
+          Number(freshLocation.longitude.toFixed(4)),
+        );
+      } catch (error: any) {
+        console.log('❌ Location fetch failed:', error);
+        RNAlert.alert('Location Error', 'Failed to get current location');
+      } finally {
       }
-      const freshLocation: any = await getFreshLocation();
-      console.log(
-        '🚀 ~ handleGetLocationUltraFast ~ freshLocation:',
-        freshLocation,
-      );
-
-      dispatch(
-        setLocation({
-          latitude: Number(freshLocation.latitude.toFixed(4)),
-          longitude: Number(freshLocation.longitude.toFixed(4)),
-        }),
-      );
-      navigateToReport(
-        Number(freshLocation.latitude.toFixed(4)),
-        Number(freshLocation.longitude.toFixed(4)),
-      );
-    } catch (error: any) {
-      console.log('❌ Location fetch failed:', error);
-      RNAlert.alert('Location Error', 'Failed to get current location');
-    } finally {
     }
   };
 
-  const navigateToReport = async (lat: number, lng: number) => {
+  const navigateToReport = async (
+    lat: number,
+    lng: number,
+    // address: string,
+  ) => {
+    setFetchLocation(false);
+
     let checkInData = {
       employeeId: '',
       employeeRole: '',
       location: {
         lat: lat,
         lng: lng,
+        // address: formattedAddress,
       },
     };
-    // checkLocation({ body: checkInData })
-    //   .unwrap()
-    //   .then((res: any) => {
-    //     if (res?.success === true) {
-    //       Alert.showSuccess(res?.message);
-    //     } else {
-    //       Alert.showError(res?.message);
-    //     }
-    //   })
-    //   .catch((err: any) => {
-    //     console.log('🚀 ~ navigateToReport ~ err:', err);
-    //   })
-    //   .finally(() => setFetchLocation(false));
+
+    checkLocation({ body: checkInData })
+      .unwrap()
+      .then((res: any) => {
+        Alert.showSuccess(res?.message);
+      })
+      .catch((err: any) => {
+        console.log('🚀 ~ navigateToReport ~ err:', err);
+      })
+      .finally(() => setFetchLocation(false));
+  };
+
+  const handleBreak = () => {
+    const Break =
+      data?.data?.checkInStatus === 'OnBreak' ? endBreak : startBreak;
+    Break({
+      body: {
+        employeeId: user?.employeeId,
+      },
+    })
+      .unwrap()
+      .then((res: any) => {
+        Alert.showSuccess(res?.message);
+        hideBottomSheet();
+      })
+      .catch((err: any) => {
+        console.log('🚀 ~ navigateToReport ~ err:', err);
+      })
+      .finally(() => setFetchLocation(false));
   };
 
   return (
@@ -99,6 +151,9 @@ const Home = () => {
       <CheckInCard
         loading={locationFetch}
         onPressCheckIn={handleGetLocationUltraFast}
+        checkedInData={data?.data}
+        isLoading={isLoading}
+        onStartBreak={handleBreak}
       />
 
       <AttendanceSummary />

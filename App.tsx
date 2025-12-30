@@ -24,6 +24,9 @@ import Routes from './src/routes';
 import DropdownAlert from 'react-native-dropdownalert';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import Geocoder from 'react-native-geocoding';
+
+
 
 const App = () => {
   const [isEnabledOne, setIsEnabledOne] = useState(false);

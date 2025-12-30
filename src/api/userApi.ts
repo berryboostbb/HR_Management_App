@@ -40,7 +40,39 @@ export const userApi = baseApi.injectEndpoints({
         method: 'POST',
         body: body,
       }),
-      invalidatesTags: ['CheckIn'],
+      invalidatesTags: ['Status'],
+    }),
+
+    checkOut: builder.mutation<any, { body: any }>({
+      query: ({ body }) => ({
+        url: '/attendance/checkout',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['Status'],
+    }),
+
+    startBreak: builder.mutation<any, { body: any }>({
+      query: ({ body }) => ({
+        url: '/attendance/startBreak',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['Status'],
+    }),
+
+    endBreak: builder.mutation<any, { body: any }>({
+      query: ({ body }) => ({
+        url: '/attendance/endBreak',
+        method: 'POST',
+        body: body,
+      }),
+      invalidatesTags: ['Status'],
+    }),
+
+    getAttendanceStatus: builder.query<any[], void>({
+      query: () => `/attendance/status`,
+      providesTags: ['Status'],
     }),
 
     applyleve: builder.mutation<any, { body: any }>({
@@ -66,7 +98,11 @@ export const {
   useUpdateUserMutation,
   useUploadFileMutation,
   useCheckLocationMutation,
+  useCheckOutMutation,
+  useStartBreakMutation,
+  useEndBreakMutation,
+  useGetAttendanceStatusQuery,
   useApplyleveMutation,
   useGetAllleavesQuery,
-  useGetPayrollQuery
+  useGetPayrollQuery,
 } = userApi;

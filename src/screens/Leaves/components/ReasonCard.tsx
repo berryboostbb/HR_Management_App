@@ -23,6 +23,13 @@ const ReasonCard = ({ item }: any) => {
       year: 'numeric',
     });
   };
+
+  const startDate = formatDate(item?.startDate);
+  const endDate = formatDate(item?.endDate);
+  const sameDate = startDate === endDate ? true : false;
+
+  
+
   return (
     <View style={styles.borderView}>
       <View style={styles.row}>
@@ -39,12 +46,16 @@ const ReasonCard = ({ item }: any) => {
           {formatDate(item?.startDate)}
           {/* {item?.startDate} */}
         </AppText>
-        <AppText size={11} medium color={colors.mediumGray}>
-          to
-        </AppText>
-        <AppText size={11} medium>
-          {formatDate(item?.endDate)}
-        </AppText>
+        {!sameDate && (
+          <>
+            <AppText size={11} medium color={colors.mediumGray}>
+              to
+            </AppText>
+            <AppText size={11} medium>
+              {formatDate(item?.endDate)}
+            </AppText>
+          </>
+        )}
       </View>
       <View style={styles.reason}>
         <AppText size={11} medium>

@@ -1,7 +1,7 @@
 import { ImageBackground, StyleSheet, Text, View } from 'react-native';
 import React from 'react';
 import { useTheme } from '@react-navigation/native';
-import { rs } from '@utils';
+import { rs, useBottomSheet } from '@utils';
 import { ModalFooter, PrimaryButton } from '@components';
 import { BottomCard } from '@assets';
 
@@ -9,9 +9,12 @@ const CenteredModal = ({
   button1_title = 'Cancel',
   button2_title = 'Yes',
   renderContent,
+  onPressBtn,
 }: any) => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
+    const { hideBottomSheet } = useBottomSheet();
+  
   return (
     <View style={styles.card}>
       {renderContent}
@@ -19,6 +22,8 @@ const CenteredModal = ({
         styles={styles}
         btn1_Title={button1_title}
         btn2_Title={button2_title}
+        onPressBtn={onPressBtn}
+        onHide={hideBottomSheet}
       />
     </View>
   );
@@ -41,7 +46,7 @@ const useStyles = (colors: any) =>
     },
   });
 
-const Footer = ({ btn1_Title, btn2_Title, styles }: any) => {
+const Footer = ({ btn1_Title, btn2_Title, styles, onPressBtn,onHide }: any) => {
   const { colors } = useTheme();
 
   return (
@@ -52,13 +57,18 @@ const Footer = ({ btn1_Title, btn2_Title, styles }: any) => {
       >
         <View style={styles.row}>
           <PrimaryButton
+          onPress={onHide}
             title={btn1_Title}
             width={'48%'}
             backgroundColor="transparent"
             textColor={colors.primary}
             style={{ borderWidth: 1, borderColor: colors.primary }}
           />
-          <PrimaryButton title={btn2_Title} width={'48%'} />
+          <PrimaryButton
+            onPress={onPressBtn}
+            title={btn2_Title}
+            width={'48%'}
+          />
         </View>
       </ImageBackground>
     </View>

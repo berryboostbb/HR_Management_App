@@ -25,7 +25,7 @@ const userSlice = createSlice({
       state.isLoggedIn = action.payload;
     },
     logout: state => {
-      Object.assign(state, initialState); // sab reset ho jaye
+      Object.assign(state, initialState); 
     },
     setLocation: (state, action) => {
       state.location = action.payload;

@@ -1,22 +1,22 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
-import {Plan } from '@screens';
+import {Events } from '@screens';
 
 const Stack = createStackNavigator();
 
-const PlanStack = () => {
+const EventStack = () => {
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
       }}>
-      <Stack.Screen name="PlanMainScreen" component={Plan} />
+      <Stack.Screen name="EventsMainScreen" component={Events} />
      
     </Stack.Navigator>
   )
 }
 
-export default PlanStack
+export default EventStack
 
 const styles = StyleSheet.create({})

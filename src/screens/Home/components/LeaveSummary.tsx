@@ -9,10 +9,12 @@ import React, { useState } from 'react';
 import { AppText, Card } from '@components';
 import { rs } from '@utils';
 import { useTheme } from '@react-navigation/native';
+import { navigate } from '@services';
 
 const LeaveSummary = () => {
   const { colors }: any = useTheme();
-  const [select, setSelect] = useState('Annual');
+  // const [select, setSelect] = useState('Annual');
+  
   const DATA = [
     { key: 'Annual', value: '13', color: '#34C759', label: 'Available:10' },
     { key: 'Casual', value: '10', color: '#F0C000', label: 'Availed:1' },
@@ -28,16 +30,16 @@ const LeaveSummary = () => {
     <Card title="Leave Summary">
       <View style={styles.row}>
         {DATA.map(item => {
-          const isActive = select === item.key;
-          const bg = isActive ? '#E5EBF7' : colors.white;
+          // const isActive = select === item.key;
+          // const bg = isActive ? '#E5EBF7' : colors.white;
 
           return (
             <View key={item.key} style={styles.cardWidth}>
               <TouchableOpacity
-                style={[styles.squareCard, { backgroundColor: bg }]}
-                onPress={() => setSelect(item.key)}
+                style={[styles.squareCard, { backgroundColor: colors.white }]}
+                onPress={() => navigate('Leaves')}
               >
-                {isActive && <View style={[styles.triangleDown, { borderTopColor: bg }]} />}
+                {/* {isActive && <View style={[styles.triangleDown, { borderTopColor: bg }]} />} */}
                 <AppText size={16} medium>
                   {item.value}
                 </AppText>
@@ -46,7 +48,7 @@ const LeaveSummary = () => {
                 </AppText>
               </TouchableOpacity>
 
-              <SummaryItems color={item.color} title={item.label} />
+              {/* <SummaryItems color={item.color} title={item.label} /> */}
             </View>
           );
         })}

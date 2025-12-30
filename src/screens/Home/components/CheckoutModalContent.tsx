@@ -8,16 +8,21 @@ import { BottomCard } from '@assets';
 const CheckoutModalContent = () => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
+
+    const currentTime = new Date().toLocaleTimeString('en-US', {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
   return (
     <View style={styles.content}>
       <AppText size={20} semiBold center>
         Ready to check out?
       </AppText>
-      <AppText medium center color={colors.mediumGray}> 
+      {/* <AppText medium center color={colors.mediumGray}> 
         You’ve completed 9hrs today
-      </AppText>
+      </AppText> */}
       <AppText regular center color={colors.mediumGray}>
-        Today time 09h:03m
+        Today time {currentTime}
       </AppText>
     </View>
   );

@@ -10,7 +10,8 @@ interface Props {
   children?: any;
   title2?: string;
   date?: string;
-  marginTop?:number
+  marginTop?: number;
+  overflow?: any;
 }
 
 const Card = ({
@@ -19,14 +20,24 @@ const Card = ({
   padding = 12,
   title2 = '',
   date = '',
-  marginTop=12
+  marginTop = 12,
+  overflow = 'hidden',
 }: Props) => {
   const theme: any = useTheme();
   const colors: any = theme.colors;
   const styles = useStyles(colors);
   return (
     <View>
-      <View style={[styles.card, { padding: rs(padding),marginTop:rs(marginTop) }]}>
+      <View
+        style={[
+          styles.card,
+          {
+            padding: rs(padding),
+            marginTop: rs(marginTop),
+            overflow: overflow,
+          },
+        ]}
+      >
         {title && <AppText medium>{title}</AppText>}
         {title2 && (
           <AppText regular size={10} color={colors.mediumGray}>
@@ -59,7 +70,6 @@ const useStyles = (colors: any) =>
       marginHorizontal: rs(12),
       // elevation: 5,
       borderRadius: rs(16),
-      overflow: 'hidden',
     },
     date: {
       position: 'absolute',

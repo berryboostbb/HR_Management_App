@@ -22,6 +22,7 @@ interface Props {
   checkedInData?: any;
   isLoading?: any;
   onStartBreak?: any;
+  breakLoading?: any;
 }
 
 const CheckInCard = ({
@@ -30,8 +31,10 @@ const CheckInCard = ({
   checkedInData,
   isLoading,
   onStartBreak,
+  breakLoading,
 }: Props) => {
-  console.log('🚀 ~ CheckInCard ~ checkedInData:', checkedInData);
+  console.log("🚀 ~ CheckInCard ~ breakLoading:", breakLoading)
+  // console.log('🚀 ~ CheckInCard ~ checkedInData:', checkedInData);
   const { colors }: any = useTheme();
   const styles = useStyles(colors);
   const { user } = useSelector((state: any) => state.user);
@@ -58,12 +61,32 @@ const CheckInCard = ({
       ? true
       : false;
 
+  const getTimeDiff = (startTime: string, endTime: string) => {
+    const diffMs = new Date(endTime).getTime() - new Date(startTime).getTime();
+
+    const hours = Math.floor(diffMs / (1000 * 60 * 60));
+    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+
+    return `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(
+      2,
+      '0',
+    )}m`;
+  };
+
   return (
     <Card
       marginTop={0}
       title={'Good Morning'}
       title2={user.employeeType}
       date={getTodayDateWithDay()}
+      breakTime={
+        breakAvailed
+          ? getTimeDiff(
+              checkedInData?.breakStatus?.startTime,
+              checkedInData?.breakStatus?.endTime,
+            )
+          : ''
+      }
     >
       {checkedInData?.checkInStatus === 'OnBreak' ? (
         <TakeBreak
@@ -93,13 +116,14 @@ const CheckInCard = ({
             onPress={() =>
               showBottomSheet(
                 <CenteredModal
-                  button2_title={'Start'}
+                  button2_title={checkedInData?.checkInStatus === 'OnBreak' ? 'End' : 'Start'}
                   onPressBtn={onStartBreak}
+                  loading={breakLoading}
                   renderContent={
                     <BreakModalContent
-                      breakTime="Brake time 00h:00m"
+                      breakTime=""
                       title={
-                        checkedInData?.checkInStatus === 'OnBreak'
+                        checkedInData?.checkInStatus === 'CheckedIn'
                           ? 'Are you sure to take a \n brake?'
                           : 'Are you sure you want to end a \n brake?'
                       }
@@ -111,6 +135,8 @@ const CheckInCard = ({
             }
             style={styles.breakButton}
           >
+           {breakLoading ? <ActivityIndicator color={colors.primary}/> : 
+           <>
             <Break height={rs(16)} width={rs(16)} />
 
             <AppText
@@ -124,11 +150,19 @@ const CheckInCard = ({
                 ? 'Break Already Availed'
                 : 'Take A Break'}
             </AppText>
+           </>
+           }
           </TouchableOpacity>
         ) : null}
         <PrimaryButton
           loading={loading}
-          disabled={checkedInData?.checkInStatus === 'OnBreak' ? true : false}
+          disabled={
+            checkedInData?.checkInStatus === 'OnBreak'
+              ? true
+              : !checkedInData
+              ? true
+              : false
+          }
           onPress={onPressCheckIn}
           title={
             checkedInData?.checkInStatus === 'CheckedIn' ||

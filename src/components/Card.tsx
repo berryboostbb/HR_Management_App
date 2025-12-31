@@ -12,6 +12,7 @@ interface Props {
   date?: string;
   marginTop?: number;
   overflow?: any;
+  breakTime?: any;
 }
 
 const Card = ({
@@ -22,6 +23,7 @@ const Card = ({
   date = '',
   marginTop = 12,
   overflow = 'hidden',
+  breakTime,
 }: Props) => {
   const theme: any = useTheme();
   const colors: any = theme.colors;
@@ -45,14 +47,24 @@ const Card = ({
           </AppText>
         )}
         {date && (
-          <AppText
-            regular
-            size={12}
-            color={colors.mediumGray}
-            style={styles.date}
-          >
-            {date}
-          </AppText>
+          <View style={styles.date}>
+            <AppText regular size={12} color={colors.mediumGray}>
+              {date}
+            </AppText>
+            {breakTime && (
+              <AppText
+                regular
+                size={12}
+                color={colors.mediumGray}
+                style={{ textAlign: 'right' }}
+              >
+                Break :{' '}
+                <AppText regular size={12}>
+                  {breakTime}
+                </AppText>
+              </AppText>
+            )}
+          </View>
         )}
 
         {children}

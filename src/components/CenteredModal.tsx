@@ -10,11 +10,12 @@ const CenteredModal = ({
   button2_title = 'Yes',
   renderContent,
   onPressBtn,
+  loading,
 }: any) => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
-    const { hideBottomSheet } = useBottomSheet();
-  
+  const { hideBottomSheet } = useBottomSheet();
+
   return (
     <View style={styles.card}>
       {renderContent}
@@ -24,6 +25,7 @@ const CenteredModal = ({
         btn2_Title={button2_title}
         onPressBtn={onPressBtn}
         onHide={hideBottomSheet}
+        loading={loading}
       />
     </View>
   );
@@ -46,7 +48,14 @@ const useStyles = (colors: any) =>
     },
   });
 
-const Footer = ({ btn1_Title, btn2_Title, styles, onPressBtn,onHide }: any) => {
+const Footer = ({
+  btn1_Title,
+  btn2_Title,
+  styles,
+  onPressBtn,
+  onHide,
+  loading,
+}: any) => {
   const { colors } = useTheme();
 
   return (
@@ -57,7 +66,7 @@ const Footer = ({ btn1_Title, btn2_Title, styles, onPressBtn,onHide }: any) => {
       >
         <View style={styles.row}>
           <PrimaryButton
-          onPress={onHide}
+            onPress={onHide}
             title={btn1_Title}
             width={'48%'}
             backgroundColor="transparent"
@@ -68,6 +77,7 @@ const Footer = ({ btn1_Title, btn2_Title, styles, onPressBtn,onHide }: any) => {
             onPress={onPressBtn}
             title={btn2_Title}
             width={'48%'}
+            loading={loading}
           />
         </View>
       </ImageBackground>

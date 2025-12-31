@@ -28,7 +28,7 @@ const Leaves = () => {
   };
 
   return (
-    <Wrapper paddingBottom={rs(100)} search={false} absoluteView={<AddButton onPress={onPressAdd} />}>
+    <Wrapper refetch={refetch} paddingBottom={rs(100)} search={false} absoluteView={<AddButton onPress={onPressAdd} />}>
       <LeavesCard />
       <LeaveRequest data={data} isLoading={isLoading} />
       {/* <LeaveHistory data={LeaveHistoryData} /> */}

@@ -27,7 +27,7 @@ export default function CustomModal({
   fotter = true,
   onFooterPress,
   centerLayout = false,
-  modalHeight = 708
+  modalHeight = 708,
 }: any) {
   const translateY = useSharedValue(height);
 
@@ -38,19 +38,19 @@ export default function CustomModal({
     });
   }, [visible]);
 
-  const gesture = Gesture.Pan()
-    .onUpdate(e => {
-      if (e.translationY > 0) translateY.value = e.translationY;
-    })
-    .onEnd(e => {
-      if (e.translationY > 120) {
-        translateY.value = withTiming(height, { duration: 200 }, () => {
-          runOnJS(onClose)();
-        });
-      } else {
-        translateY.value = withTiming(0, { duration: 200 });
-      }
-    });
+  // const gesture = Gesture.Pan()
+  //   .onUpdate(e => {
+  //     if (e.translationY > 0) translateY.value = e.translationY;
+  //   })
+  //   .onEnd(e => {
+  //     if (e.translationY > 120) {
+  //       translateY.value = withTiming(height, { duration: 250 }, () => {
+  //         onClose();
+  //       });
+  //     } else {
+  //       translateY.value = withTiming(0, { duration: 250 });
+  //     }
+  //   });
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: translateY.value }],
@@ -65,9 +65,11 @@ export default function CustomModal({
         style={StyleSheet.absoluteFill}
       >
         {centerLayout ? (
-          <View style={{ flex: 1, justifyContent: 'center' }}>
+          <Animated.View
+            style={[{ flex: 1, justifyContent: 'center' }, animatedStyle]}
+          >
             {children}
-          </View>
+          </Animated.View>
         ) : (
           <Animated.View
             style={[
@@ -76,18 +78,18 @@ export default function CustomModal({
               {
                 borderTopLeftRadius: bottom ? 0 : 16,
                 borderTopRightRadius: bottom ? 0 : 16,
-                height:modalHeight
+                height: modalHeight,
               },
             ]}
           >
-            {!bottom && (
+            {/* {!bottom && (
               <GestureDetector gesture={gesture}>
                 <View style={{ paddingTop: rs(8) }}>
                   <View style={styles.notch} />
                 </View>
               </GestureDetector>
-            )}
-            <View style={{ flex: 1 }}>{children}</View>
+            )} */}
+            <View style={{ flex: 1,paddingTop:rs(16) }}>{children}</View>
           </Animated.View>
         )}
       </KeyboardAvoidingView>

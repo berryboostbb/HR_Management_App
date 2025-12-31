@@ -15,6 +15,7 @@ export const BottomCard = require('./images/bottomCard.png');
 export const LogoV1 = require('./images/LogoV1.png');
 export const HR_Logo = require('./images/logo.png');
 export const Event_Img = require('./images/eventImage.jpg');
+export const Birthday_Banner = require('./images/BirthdayBanner.png');
 
 export const HomeIcon = ({ color, isFocused }: any) => {
   return (

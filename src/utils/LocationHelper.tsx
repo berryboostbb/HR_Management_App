@@ -1,4 +1,5 @@
 import { Platform, PermissionsAndroid, Alert, Linking } from 'react-native';
+import Geolocation from '@react-native-community/geolocation';
 
 export const requestLocationPermission = async (): Promise<boolean> => {
   if (Platform.OS === 'android') {
@@ -10,7 +11,7 @@ export const requestLocationPermission = async (): Promise<boolean> => {
           message: 'This app needs access to your location.',
           buttonPositive: 'OK',
           buttonNegative: 'Cancel',
-        }
+        },
       );
 
       if (granted === PermissionsAndroid.RESULTS.GRANTED) {
@@ -29,7 +30,7 @@ export const requestLocationPermission = async (): Promise<boolean> => {
               onPress: () => Linking.openSettings(),
             },
             { text: 'Cancel', style: 'cancel' },
-          ]
+          ],
         );
         return false;
       }
@@ -42,4 +43,25 @@ export const requestLocationPermission = async (): Promise<boolean> => {
   }
 
   return true; // iOS automatically asks
+};
+
+export const getFreshLocation = () => {
+  return new Promise((resolve, reject) => {
+    Geolocation.getCurrentPosition(
+      position => {
+        const { latitude, longitude } = position.coords;
+        // console.log('📍 FRESH Location:', { latitude, longitude });
+        resolve({ latitude, longitude });
+      },
+      error => {
+        console.log('❌ Fresh Location Error:', error);
+        reject(error);
+      },
+      {
+        enableHighAccuracy: false,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  });
 };

@@ -46,9 +46,12 @@ export const BottomSheetProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const hideBottomSheet = () => {
-    setVisible(false);
-    setContent(null);
-    setModalProps({});
+    setVisible(false); // triggers CustomModal close animation
+    const timer = setTimeout(() => {
+      setContent(null);
+      setModalProps({});
+    }, 500);
+    return () => clearTimeout(timer);
   };
 
   useEffect(() => {
@@ -56,6 +59,7 @@ export const BottomSheetProvider: React.FC<{ children: ReactNode }> = ({
       'hardwareBackPress',
       () => {
         if (visible) {
+          console.log("chal;a........")
           hideBottomSheet();
           return true;
         }
@@ -69,7 +73,7 @@ export const BottomSheetProvider: React.FC<{ children: ReactNode }> = ({
   return (
     <BottomSheetContext.Provider value={{ showBottomSheet, hideBottomSheet }}>
       {children}
-      <CustomModal visible={visible} onClose={hideBottomSheet} {...modalProps} >
+      <CustomModal visible={visible} onClose={hideBottomSheet} {...modalProps}>
         {content}
       </CustomModal>
     </BottomSheetContext.Provider>

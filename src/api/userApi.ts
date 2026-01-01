@@ -88,6 +88,10 @@ export const userApi = baseApi.injectEndpoints({
       providesTags: ['Leaves'],
     }),
 
+       getAllEvents: builder.query<any[], void>({
+      query: () => `/events/getAllEvents`,
+      // providesTags: ['Status'],
+    }),
     getPayroll: builder.query({
       query: ({ id }) => `/payroll/employee/${id}`,
     }),
@@ -104,5 +108,6 @@ export const {
   useGetAttendanceStatusQuery,
   useApplyleveMutation,
   useGetAllleavesQuery,
+  useGetAllEventsQuery,
   useGetPayrollQuery,
 } = userApi;

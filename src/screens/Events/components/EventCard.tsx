@@ -5,20 +5,32 @@ import { useTheme } from '@react-navigation/native';
 import { Event_Img } from '@assets';
 import { AppText } from '@components';
 
-const EventCard = () => {
+const EventCard = ({ item }: any) => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
+
+  const date = new Date(item?.date);
+
+  const formatted = date.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  });
+
   return (
     <View style={styles.card}>
       <View style={styles.imgView}>
-        <Image source={Event_Img} style={styles.img} />
+        <Image
+          source={item?.coverImage ? { uri: item?.coverImage } : Event_Img}
+          style={styles.img}
+        />
       </View>
       <AppText
         regular
         color={colors.mediumGray}
         style={{ marginLeft: rs(12), marginTop: rs(12) }}
       >
-        Dec 28, 2025
+        {formatted}
       </AppText>
 
       <AppText
@@ -26,7 +38,7 @@ const EventCard = () => {
         size={18}
         style={{ marginLeft: rs(12), marginTop: rs(12), width: rs(250) }}
       >
-        Himmel Pharmaceutical x foodpanda
+        {item?.heading}
       </AppText>
 
       <AppText
@@ -34,9 +46,7 @@ const EventCard = () => {
         size={11}
         style={{ marginLeft: rs(12), marginTop: rs(4), width: rs(310) }}
       >
-        As December marks Lung Cancer Awareness Month, Himmel Pharmaceuticals
-        joined hands with foodpanda to host an impactful awareness session for
-        their delivery heroes who keep our cities moving.
+        {item?.overview}
       </AppText>
     </View>
   );

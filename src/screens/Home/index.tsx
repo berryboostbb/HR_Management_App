@@ -31,7 +31,7 @@ const Home = () => {
   const [checkLocation] = useCheckLocationMutation();
   const [checkOut] = useCheckOutMutation();
 
-  // console.log("🚀 ~ Home ~ user:", token)
+  // console.log("🚀 ~ Home ~ user:...", token)
 
   const [locationFetch, setFetchLocation] = useState(false);
   const status = data?.data?.checkInStatus;
@@ -96,7 +96,7 @@ const Home = () => {
       });
       const timer = setTimeout(() => {
         hideBottomSheet();
-      }, 1000);
+      }, 2000);
       return () => clearTimeout(timer);
     } catch {
       RNAlert.alert('Location Error', 'Failed to get current location');

@@ -24,7 +24,7 @@ const ApplyLeave = () => {
   const [open, setOpen] = useState('');
   const { user } = useSelector((state: any) => state.user);
   const { hideBottomSheet } = useBottomSheet();
-    console.log("🚀 ~ ApplyLeave ~ user...:", user)
+    // console.log("🚀 ~ ApplyLeave ~ user...:", user)
 
   const [applyLeave,{isLoading}] = useApplyleveMutation();
 

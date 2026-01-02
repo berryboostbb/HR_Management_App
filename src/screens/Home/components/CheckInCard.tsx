@@ -1,11 +1,10 @@
 import {
   ActivityIndicator,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { AppText, Card, CenteredModal, PrimaryButton } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { rs, useBottomSheet } from '@utils';
@@ -13,16 +12,15 @@ import { Break } from '@assets';
 import { useSelector } from 'react-redux';
 import TimerText from './TimerText';
 import TakeBreak from './TakeBreak';
-import { useStartBreakMutation } from '../../../../src/api/userApi';
 import BreakModalContent from './BreakModalContent';
 
 interface Props {
-  onPressCheckIn?: any;
-  loading?: any;
+  onPressCheckIn?: () => void;
+  loading?: boolean;
   checkedInData?: any;
-  isLoading?: any;
-  onStartBreak?: any;
-  breakLoading?: any;
+  isLoading?: boolean;
+  onStartBreak?: () => void;
+  breakLoading?: boolean;
 }
 
 const CheckInCard = ({
@@ -33,39 +31,41 @@ const CheckInCard = ({
   onStartBreak,
   breakLoading,
 }: Props) => {
-  console.log("🚀 ~ CheckInCard ~ breakLoading:", breakLoading)
-  // console.log('🚀 ~ CheckInCard ~ checkedInData:', checkedInData);
   const { colors }: any = useTheme();
   const styles = useStyles(colors);
   const { user } = useSelector((state: any) => state.user);
   const { showBottomSheet } = useBottomSheet();
 
-  const getTodayDateWithDay = () => {
+  /* ----------------------------- Helpers ----------------------------- */
+
+  const todayWithDay = useMemo(() => {
     const today = new Date();
 
-    const datePart = today.toLocaleDateString('en-US', {
+    const date = today.toLocaleDateString('en-US', {
       month: 'short',
       day: '2-digit',
       year: 'numeric',
     });
 
-    const dayPart = today.toLocaleDateString('en-US', {
-      weekday: 'long',
-    });
+    const day = today.toLocaleDateString('en-US', { weekday: 'long' });
 
-    return `${datePart} - ${dayPart}`;
-  };
+    return `${date} - ${day}`;
+  }, []);
 
-  const breakAvailed =
-    checkedInData?.breakStatus?.endTime && checkedInData?.breakStatus?.startTime
-      ? true
-      : false;
+  const breakStatus = checkedInData?.breakStatus;
+  const checkInStatus = checkedInData?.checkInStatus;
 
-  const getTimeDiff = (startTime: string, endTime: string) => {
-    const diffMs = new Date(endTime).getTime() - new Date(startTime).getTime();
+  const isCheckedIn = checkInStatus === 'CheckedIn';
+  const isOnBreak = checkInStatus === 'OnBreak';
 
-    const hours = Math.floor(diffMs / (1000 * 60 * 60));
-    const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const breakAvailed = Boolean(
+    breakStatus?.startTime && breakStatus?.endTime,
+  );
+
+  const getTimeDiff = (start: string, end: string) => {
+    const diff = new Date(end).getTime() - new Date(start).getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
 
     return `${String(hours).padStart(2, '0')}h ${String(minutes).padStart(
       2,
@@ -73,25 +73,45 @@ const CheckInCard = ({
     )}m`;
   };
 
+  const handleBreakPress = () => {
+    showBottomSheet(
+      <CenteredModal
+        button2_title={isOnBreak ? 'End' : 'Start'}
+        onPressBtn={onStartBreak}
+        loading={breakLoading}
+        renderContent={
+          <BreakModalContent
+            breakTime=""
+            title={
+              isCheckedIn
+                ? 'Are you sure to take a \n break?'
+                : 'Are you sure you want to end a \n break?'
+            }
+          />
+        }
+      />,
+      { centerLayout: true },
+    );
+  };
+
+  /* ----------------------------- UI ----------------------------- */
+
   return (
     <Card
       marginTop={0}
-      title={'Good Morning'}
-      title2={user.employeeType}
-      date={getTodayDateWithDay()}
+      title="Good Morning"
+      title2={user?.employeeType}
+      date={todayWithDay}
       breakTime={
         breakAvailed
-          ? getTimeDiff(
-              checkedInData?.breakStatus?.startTime,
-              checkedInData?.breakStatus?.endTime,
-            )
+          ? getTimeDiff(breakStatus?.startTime, breakStatus?.endTime)
           : ''
       }
     >
-      {checkedInData?.checkInStatus === 'OnBreak' ? (
+      {isOnBreak ? (
         <TakeBreak
-          checkInTime={checkedInData?.breakStatus?.startTime}
-          isCheckedIn={checkedInData?.checkInStatus === 'OnBreak'}
+          checkInTime={breakStatus?.startTime}
+          isCheckedIn
           color={colors.white}
         />
       ) : (
@@ -101,7 +121,7 @@ const CheckInCard = ({
           ) : (
             <TimerText
               checkInTime={checkedInData?.checkInTime}
-              isCheckedIn={checkedInData?.checkInStatus === 'CheckedIn'}
+              isCheckedIn={isCheckedIn}
               color={colors.white}
             />
           )}
@@ -109,67 +129,40 @@ const CheckInCard = ({
       )}
 
       <View style={styles.row}>
-        {checkedInData?.checkInStatus === 'CheckedIn' ||
-        checkedInData?.checkInStatus === 'OnBreak' ? (
+        {(isCheckedIn || isOnBreak) && (
           <TouchableOpacity
             disabled={breakAvailed}
-            onPress={() =>
-              showBottomSheet(
-                <CenteredModal
-                  button2_title={checkedInData?.checkInStatus === 'OnBreak' ? 'End' : 'Start'}
-                  onPressBtn={onStartBreak}
-                  loading={breakLoading}
-                  renderContent={
-                    <BreakModalContent
-                      breakTime=""
-                      title={
-                        checkedInData?.checkInStatus === 'CheckedIn'
-                          ? 'Are you sure to take a \n brake?'
-                          : 'Are you sure you want to end a \n brake?'
-                      }
-                    />
-                  }
-                />,
-                { centerLayout: true },
-              )
-            }
+            onPress={handleBreakPress}
             style={styles.breakButton}
           >
-           {breakLoading ? <ActivityIndicator color={colors.primary}/> : 
-           <>
-            <Break height={rs(16)} width={rs(16)} />
-
-            <AppText
-              size={10}
-              regular
-              color={breakAvailed ? colors.mediumGray : colors.primary}
-            >
-              {checkedInData?.checkInStatus === 'OnBreak'
-                ? 'End'
-                : breakAvailed
-                ? 'Break Already Availed'
-                : 'Take A Break'}
-            </AppText>
-           </>
-           }
+            {breakLoading ? (
+              <ActivityIndicator color={colors.primary} />
+            ) : (
+              <>
+                <Break height={rs(16)} width={rs(16)} />
+                <AppText
+                  size={10}
+                  regular
+                  color={
+                    breakAvailed ? colors.mediumGray : colors.primary
+                  }
+                >
+                  {isOnBreak
+                    ? 'End'
+                    : breakAvailed
+                    ? 'Break Already Availed'
+                    : 'Take A Break'}
+                </AppText>
+              </>
+            )}
           </TouchableOpacity>
-        ) : null}
+        )}
+
         <PrimaryButton
           loading={loading}
-          disabled={
-            checkedInData?.checkInStatus === 'OnBreak'
-              ? true
-              : !checkedInData
-              ? true
-              : false
-          }
+          disabled={isOnBreak || !checkedInData}
           onPress={onPressCheckIn}
-          title={
-            checkedInData?.checkInStatus === 'CheckedIn' ||
-            checkedInData?.checkInStatus === 'OnBreak'
-              ? 'Check-out'
-              : 'Check-in'
-          }
+          title={isCheckedIn || isOnBreak ? 'Check-out' : 'Check-in'}
           width={rs(120)}
           style={styles.button}
         />
@@ -179,6 +172,8 @@ const CheckInCard = ({
 };
 
 export default CheckInCard;
+
+/* ----------------------------- Styles ----------------------------- */
 
 const useStyles = (colors: any) =>
   StyleSheet.create({
@@ -191,13 +186,18 @@ const useStyles = (colors: any) =>
       alignItems: 'center',
       justifyContent: 'center',
     },
+    row: {
+      alignItems: 'center',
+      marginTop: rs(30),
+      width: '100%',
+    },
     button: {
       alignSelf: 'flex-end',
     },
     breakButton: {
-      height: rs(40),
       position: 'absolute',
       left: 0,
+      height: rs(40),
       width: '60%',
       borderWidth: 1,
       borderColor: colors.primary,
@@ -207,10 +207,5 @@ const useStyles = (colors: any) =>
       justifyContent: 'center',
       flexDirection: 'row',
       gap: rs(8),
-    },
-    row: {
-      alignItems: 'center',
-      marginTop: rs(30),
-      width: '100%',
     },
   });

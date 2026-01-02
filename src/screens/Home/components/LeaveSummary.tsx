@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   Pressable,
   StyleSheet,
   Text,
@@ -11,16 +12,28 @@ import { rs } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import { navigate } from '@services';
 
-const LeaveSummary = () => {
+const LeaveSummary = ({ data, loading }: any) => {
   const { colors }: any = useTheme();
+  const Summary = data?.leaveEntitlements;
+
   // const [select, setSelect] = useState('Annual');
-  
+
   const DATA = [
-    { key: 'Annual', value: '13', color: '#34C759', label: 'Available:10' },
-    { key: 'Casual', value: '10', color: '#F0C000', label: 'Availed:1' },
+    {
+      key: 'Annual',
+      value: Summary?.annualLeave?.consumed,
+      color: '#34C759',
+      label: 'Available:10',
+    },
+    {
+      key: 'Casual',
+      value: Summary?.casualLeave?.consumed,
+      color: '#F0C000',
+      label: 'Availed:1',
+    },
     {
       key: 'Sick',
-      value: '05',
+      value: Summary?.sickLeave?.consumed,
       color: '#E90761',
       label: 'Pending:0',
       title: 'Sick Leave',
@@ -40,12 +53,18 @@ const LeaveSummary = () => {
                 onPress={() => navigate('Leaves')}
               >
                 {/* {isActive && <View style={[styles.triangleDown, { borderTopColor: bg }]} />} */}
-                <AppText size={16} medium>
-                  {item.value}
-                </AppText>
-                <AppText size={12} color={colors.mediumGray}>
-                  {item.title || item.key}
-                </AppText>
+                {loading ? (
+                  <ActivityIndicator />
+                ) : (
+                  <>
+                    <AppText size={16} medium>
+                      {item.value}
+                    </AppText>
+                    <AppText size={12} color={colors.mediumGray}>
+                      {item.title || item.key}
+                    </AppText>
+                  </>
+                )}
               </TouchableOpacity>
 
               {/* <SummaryItems color={item.color} title={item.label} /> */}

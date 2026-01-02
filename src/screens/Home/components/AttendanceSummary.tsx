@@ -1,25 +1,41 @@
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
-import { AppText, Card } from '@components';
-import { Month, rs, useBottomSheet, Year } from '@utils';
+import { AppText, Card, SkeletonLoading } from '@components';
+import { Month, rs, Year } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import { CalenderIcon2 } from '@assets';
 import WheelPicker from '@quidone/react-native-wheel-picker';
 import WheelPickerFeedback from '@quidone/react-native-wheel-picker-feedback';
+import { useGetAllAttendanceQuery } from '../../../../src/api/userApi';
+import { useSelector } from 'react-redux';
 
 const AttendanceSummary = () => {
   const { colors } = useTheme();
+  const { user, token } = useSelector((state: any) => state.user);
 
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear().toString();
 
-  const [tempMonth, setTempMonth] = useState(currentMonth); // wheel temp
-  const [tempYear, setTempYear] = useState(currentYear); // wheel temp
+  const [tempMonth, setTempMonth] = useState(currentMonth);
+  const [value, setValue] = useState(currentMonth);
+  const [tempYear, setTempYear] = useState(currentYear);
   const [show, setShow] = useState(false);
-  const [value, setValue] = useState(new Date().getMonth()); // current month
+
   const [yearValue, setYearValue] = useState(
     new Date().getFullYear().toString(),
   );
+
+  const { data, isLoading, refetch, isFetching }: any =
+    useGetAllAttendanceQuery({
+      id: user?.employeeId,
+      month: String(value + 1),
+      year: String(yearValue),
+    });
+
+  const Present = data?.filter((item: any) => item?.status === 'Present');
+  const Leaves = data?.filter((item: any) => item?.status === 'On Leave');
+  const ShortDuration = data?.filter((item: any) => item?.status === 'Late');
+
   const showPicker = useCallback(
     (v: boolean) => {
       if (v) {
@@ -30,13 +46,14 @@ const AttendanceSummary = () => {
     },
     [value, yearValue],
   );
+
   const monthData = Month.map((month, index) => ({
     value: index,
     label: month,
   }));
 
   const yearData = Year.map(year => ({
-    value: year.toString(), // ✅ string
+    value: year.toString(),
     label: year.toString(),
   }));
 
@@ -48,38 +65,51 @@ const AttendanceSummary = () => {
         </AppText>
         <CalenderIcon2 />
       </Pressable>
-      <View style={styles.row}>
-        <View
-          style={[styles.summaryCard, { backgroundColor: colors.lightGreen }]}
-        >
-          <AppText size={16} medium color={colors.green}>
-            13
-          </AppText>
-          <AppText size={11} color={colors.green}>
-            Present
-          </AppText>
+      {isLoading || isFetching ? (
+        <View style={styles.row}>
+          {[1, 2, 3].map(i => (
+            <SkeletonLoading key={i} style={styles.summaryCard} />
+          ))}
         </View>
-        <View
-          style={[styles.summaryCard, { backgroundColor: colors.lightYellow }]}
-        >
-          <AppText size={16} medium color={colors.yellow}>
-            04
-          </AppText>
-          <AppText size={11} color={colors.yellow}>
-            Short Duration
-          </AppText>
+      ) : (
+        <View style={styles.row}>
+          <View
+            style={[styles.summaryCard, { backgroundColor: colors.lightGreen }]}
+          >
+            <AppText size={16} medium color={colors.green}>
+              {Present?.length ?? 0}
+            </AppText>
+            <AppText size={11} color={colors.green}>
+              Present
+            </AppText>
+          </View>
+
+          <View
+            style={[
+              styles.summaryCard,
+              { backgroundColor: colors.lightYellow },
+            ]}
+          >
+            <AppText size={16} medium color={colors.yellow}>
+              {ShortDuration?.length ?? 0}
+            </AppText>
+            <AppText size={11} color={colors.yellow}>
+              Short Duration
+            </AppText>
+          </View>
+
+          <View
+            style={[styles.summaryCard, { backgroundColor: colors.lightRed }]}
+          >
+            <AppText size={16} medium color={colors.red}>
+              {Leaves?.length ?? 0}
+            </AppText>
+            <AppText size={11} color={colors.red}>
+              Leave
+            </AppText>
+          </View>
         </View>
-        <View
-          style={[styles.summaryCard, { backgroundColor: colors.lightRed }]}
-        >
-          <AppText size={16} medium color={colors.red}>
-            13
-          </AppText>
-          <AppText size={12} color={colors.red}>
-            Leave
-          </AppText>
-        </View>
-      </View>
+      )}
       <Modal
         onRequestClose={() => showPicker(false)}
         animationType="fade"
@@ -87,18 +117,7 @@ const AttendanceSummary = () => {
         backdropColor={'transparent'}
       >
         <View style={styles.wheelContainer}>
-          <View
-            style={{
-              flexDirection: 'row',
-              width: '100%',
-              borderWidth: 1,
-              justifyContent: 'space-between',
-              borderRadius: rs(16),
-              backgroundColor: colors.white,
-              paddingHorizontal: rs(16),
-              paddingBottom:rs(16)
-            }}
-          >
+          <View style={[styles.rowBetween, { backgroundColor: colors.white }]}>
             <View style={{ width: '50%' }}>
               <WheelPicker
                 data={monthData}
@@ -125,6 +144,7 @@ const AttendanceSummary = () => {
                 setValue(tempMonth);
                 setYearValue(tempYear);
                 showPicker(false);
+                refetch();
               }}
               style={[styles.btn, { borderColor: colors.primary }]}
             >
@@ -179,6 +199,16 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: rs(16),
   },
+  rowBetween: {
+    flexDirection: 'row',
+    width: '100%',
+    borderWidth: 1,
+    justifyContent: 'space-between',
+    borderRadius: rs(16),
+
+    paddingHorizontal: rs(16),
+    paddingBottom: rs(16),
+  },
 });
 
 {
@@ -191,7 +221,6 @@ const styles = StyleSheet.create({
         }}
       /> */
 }
-
 
 //   const data = Month.map((month, index) => ({
 //     value: index, // 👈 internal value

@@ -12,6 +12,8 @@ export { default as DropDownData } from './DropDownData';
 export { default as SearchInput } from './SearchInput';
 export { default as CenteredModal } from './CenteredModal';
 export { default as NoData } from './NoData';
+export { default as SkeletonLoading } from './SkeletonLoading';
+
 
 
 

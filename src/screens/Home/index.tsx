@@ -8,6 +8,7 @@ import {
   useCheckLocationMutation,
   useCheckOutMutation,
   useEndBreakMutation,
+  useGetAllUsersQuery,
   useGetAttendanceStatusQuery,
   useStartBreakMutation,
 } from '../../../src/api/userApi';
@@ -22,16 +23,21 @@ import CheckoutModalContent from './components/CheckoutModalContent';
 import ResponseModal from './components/ResponseModal';
 
 const Home = () => {
+  
   const dispatch = useDispatch();
   const { user, token } = useSelector((state: any) => state.user);
   const { showBottomSheet, hideBottomSheet } = useBottomSheet();
   const { data, refetch, isLoading }: any = useGetAttendanceStatusQuery();
   const [startBreak, { isLoading: breakLoading }] = useStartBreakMutation();
   const [endBreak, { isLoading: endBreakLoading }] = useEndBreakMutation();
+  const { data: LeaveData, isLoading: summaryLoading }: any =
+    useGetAllUsersQuery({
+      id: user?.employeeId,
+    });
   const [checkLocation] = useCheckLocationMutation();
   const [checkOut] = useCheckOutMutation();
 
-  // console.log("🚀 ~ Home ~ user:...", token)
+  // console.log('🚀 ~ Home ~ user:...', token);
 
   const [locationFetch, setFetchLocation] = useState(false);
   const status = data?.data?.checkInStatus;
@@ -142,7 +148,10 @@ const Home = () => {
         breakLoading={status === 'OnBreak' ? endBreakLoading : breakLoading}
       />
       <AttendanceSummary />
-      <LeaveSummary />
+      <LeaveSummary
+        data={LeaveData?.length > 0 ? LeaveData[0] : {}}
+        loading={summaryLoading}
+      />
     </Wrapper>
   );
 };

@@ -6,7 +6,10 @@ import LeaveRequest from './components/LeaveRequest';
 import LeaveHistory from './components/LeaveHistory';
 import { rs, useBottomSheet } from '@utils';
 import ApplyLeave from './components/ApplyLeave';
-import { useGetAllleavesQuery } from '../../../src/api/userApi';
+import {
+  useGetAllleavesQuery,
+  useGetAllUsersQuery,
+} from '../../../src/api/userApi';
 import { useSelector } from 'react-redux';
 
 const LeaveHistoryData = [
@@ -21,6 +24,11 @@ const Leaves = () => {
   const { data, isLoading, refetch, isFetching }: any = useGetAllleavesQuery({
     id: user?.employeeId,
   });
+
+  const { data: LeaveData, isLoading: summaryLoading }: any =
+    useGetAllUsersQuery({
+      id: user?.employeeId,
+    });
   const { showBottomSheet } = useBottomSheet();
 
   const onPressAdd = () => {
@@ -28,8 +36,13 @@ const Leaves = () => {
   };
 
   return (
-    <Wrapper refetch={refetch} paddingBottom={rs(100)} search={false} absoluteView={<AddButton onPress={onPressAdd} />}>
-      <LeavesCard />
+    <Wrapper
+      refetch={refetch}
+      paddingBottom={rs(100)}
+      search={false}
+      absoluteView={<AddButton onPress={onPressAdd} />}
+    >
+      <LeavesCard data={LeaveData[0]}/>
       <LeaveRequest data={data} isLoading={isLoading} />
       {/* <LeaveHistory data={LeaveHistoryData} /> */}
     </Wrapper>

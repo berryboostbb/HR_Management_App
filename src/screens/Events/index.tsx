@@ -11,14 +11,32 @@ import { rs } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import EventCard from './components/EventCard';
 import { useGetAllEventsQuery } from '../../../src/api/userApi';
-
+import EventCardSkeleton from './components/EventCardSkeleton';
+ 
 const Events = () => {
   const { colors } = useTheme();
   const [active, setActive] = useState('upcoming');
-  const { data } = useGetAllEventsQuery();
+  const { data, isLoading, isFetching, refetch } = useGetAllEventsQuery();
+
+  const isUpcomingEvent = (eventDate: string) => {
+    const now = new Date();
+    const event = new Date(eventDate);
+
+    return event.getTime() >= now.getTime();
+  };
+
+  const filteredEvents = React.useMemo(() => {
+    if (!data) return [];
+
+    if (active === 'upcoming') {
+      return data.filter((item: any) => isUpcomingEvent(item.date));
+    }
+
+    return data; 
+  }, [data, active]);
 
   return (
-    <Wrapper search={false}>
+    <Wrapper search={false} refetch={refetch}>
       <View style={styles.row}>
         <TouchableOpacity
           onPress={() => setActive('upcoming')}
@@ -51,9 +69,16 @@ const Events = () => {
           </AppText>
         </TouchableOpacity>
       </View>
-      <FlatList data={data} renderItem={({item}:any)=>(
-        <EventCard item={item}/>
-      )} />
+      {isLoading || isFetching ? (
+        <EventCardSkeleton />
+      ) : (
+        <FlatList
+          data={filteredEvents}
+          renderItem={({ item }: any) => (
+            <EventCard item={item} />
+          )}
+        />
+      )}
     </Wrapper>
   );
 };

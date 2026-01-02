@@ -4,13 +4,18 @@ import { rs } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import { Event_Img } from '@assets';
 import { AppText } from '@components';
+import EventCardSkeleton from './EventCardSkeleton';
 
-const EventCard = ({ item }: any) => {
+interface Props {
+  item?: any;
+  loading?: boolean;
+}
+
+const EventCard = ({ item }: Props) => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
 
   const date = new Date(item?.date);
-
   const formatted = date.toLocaleDateString('en-US', {
     month: 'short',
     day: '2-digit',
@@ -21,10 +26,11 @@ const EventCard = ({ item }: any) => {
     <View style={styles.card}>
       <View style={styles.imgView}>
         <Image
-          source={item?.coverImage ? { uri: item?.coverImage } : Event_Img}
+          source={item?.coverImage ? { uri: item.coverImage } : Event_Img}
           style={styles.img}
         />
       </View>
+
       <AppText
         regular
         color={colors.mediumGray}
@@ -51,6 +57,7 @@ const EventCard = ({ item }: any) => {
     </View>
   );
 };
+
 
 export default EventCard;
 

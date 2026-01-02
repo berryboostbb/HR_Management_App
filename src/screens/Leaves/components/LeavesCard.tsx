@@ -6,9 +6,9 @@ import { useTheme } from '@react-navigation/native';
 import { rs } from '@utils';
 import * as Progress from 'react-native-progress';
 
-const LeavesCard = () => {
+const LeavesCard = ({ data }: any) => {
   const { colors } = useTheme();
-
+  const Summary = data?.leaveEntitlements;
   return (
     <Card marginTop={0} title="Leaves" title2="Office Staff">
       <View style={{ alignSelf: 'center', marginTop: rs(22) }}>
@@ -39,33 +39,43 @@ const LeavesCard = () => {
           )}
         </AnimatedCircularProgress>
       </View>
-      <View style={{ flexDirection: 'row', gap: rs(18), marginBottom: rs(12),marginTop:rs(18) }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: rs(18),
+          marginBottom: rs(12),
+          marginTop: rs(18),
+        }}
+      >
         {/* <DotText title={'Used'} color={colors.primary} />
         <DotText title={'Balance'} color={'#E5EBF7'} /> */}
-        <BulletText title="Used" bulletColor={colors.primary} titleColor={colors.text}/>
-        <BulletText title="Balance" bulletColor={colors.cloudWhite}/>
-
+        <BulletText
+          title="Used"
+          bulletColor={colors.primary}
+          titleColor={colors.text}
+        />
+        <BulletText title="Balance" bulletColor={colors.cloudWhite} />
       </View>
 
       <Bar
         unFillColor="#34C7591F"
         fillColor="#34C759"
-        availedLeaves={5}
-        totalLeaves={10}
+        availedLeaves={Summary?.annualLeave?.consumed}
+        totalLeaves={Summary?.annualLeave?.total}
       />
       <Bar
         unFillColor="#FFCC001F"
         fillColor="#FFCC00"
         title="Casual"
-        availedLeaves={3}
-        totalLeaves={12}
+        availedLeaves={Summary?.casualLeave?.consumed}
+        totalLeaves={Summary?.casualLeave?.total}
       />
       <Bar
         unFillColor="#E907611F"
         fillColor="#E90761"
         title="Sick Leave"
-        availedLeaves={1}
-        totalLeaves={10}
+        availedLeaves={Summary?.sickLeave?.consumed}
+        totalLeaves={Summary?.sickLeave?.total}
       />
     </Card>
   );
@@ -84,8 +94,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
   },
 });
-
-
 
 const Bar = ({
   title = 'Annual',
@@ -118,7 +126,9 @@ const Bar = ({
   });
 
   return (
-    <View style={{ flexDirection: 'row', alignItems: 'center',marginTop:rs(8) }}>
+    <View
+      style={{ flexDirection: 'row', alignItems: 'center', marginTop: rs(8) }}
+    >
       <AppText
         size={11}
         regular

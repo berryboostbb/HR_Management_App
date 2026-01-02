@@ -40,6 +40,7 @@
     "react-native-reanimated": "^4.2.1",
     "react-native-safe-area-context": "^5.6.2",
     "react-native-screens": "^4.19.0",
+    "react-native-shimmer-placeholder": "^2.0.9",
     "react-native-size-matters": "^0.4.2",
     "react-native-svg": "^15.15.1",
     "react-native-ui-datepicker": "^3.1.2",

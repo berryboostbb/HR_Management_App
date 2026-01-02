@@ -87,6 +87,15 @@ export const userApi = baseApi.injectEndpoints({
       query: ({ id }) => `/leave/employee/${id}`,
       providesTags: ['Leaves'],
     }),
+     getAllUsers: builder.query<any[], { id?: string }>({
+      query: ({ id }) => `/auth/getAllUsers?search=${id}`,
+      // providesTags: ['Leaves'],
+    }),
+
+     getAllAttendance: builder.query<any[], { id?: string,month?:string,year:string }>({
+      query: ({ id,month,year }) => `/attendance/getAllAttendance?search=${id}&month=${month}&year=${year}`,
+      // providesTags: ['Leaves'],
+    }),
 
        getAllEvents: builder.query<any[], void>({
       query: () => `/events/getAllEvents`,
@@ -108,6 +117,8 @@ export const {
   useGetAttendanceStatusQuery,
   useApplyleveMutation,
   useGetAllleavesQuery,
+  useGetAllUsersQuery,
+  useGetAllAttendanceQuery,
   useGetAllEventsQuery,
   useGetPayrollQuery,
 } = userApi;

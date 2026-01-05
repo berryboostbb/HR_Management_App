@@ -38,6 +38,7 @@ const PrimaryButton: React.FC<Props> = ({
   style,
   textStyle,
 }) => {
+
       const theme: any = useTheme();
   const colors = theme.colors;
   return (

@@ -25,6 +25,11 @@ const Events = () => {
     return event.getTime() >= now.getTime();
   };
 
+
+  for(let i=0; i < 5; i++){
+console.log("iiii",i)
+  }
+
   const filteredEvents = React.useMemo(() => {
     if (!data) return [];
 

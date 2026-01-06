@@ -10,7 +10,7 @@ import HomeStack from './stacks/HomeStack';
 import LeavesStack from './stacks/LeavesStack';
 import { EventsTab, HomeIcon, LeavesIcon, MoreIcon, PlanIcon } from '@assets';
 import MoreStack from './stacks/MoreStack';
-import EventStack from './stacks/PlanStack';
+import EventStack from './stacks/EventStack';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();

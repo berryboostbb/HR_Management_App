@@ -6,13 +6,13 @@ import {
   View,
 } from 'react-native';
 import React, { useState } from 'react';
-import { AppText, Wrapper } from '@components';
+import { AppText, NoData, Wrapper } from '@components';
 import { rs } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import EventCard from './components/EventCard';
 import { useGetAllEventsQuery } from '../../../src/api/userApi';
 import EventCardSkeleton from './components/EventCardSkeleton';
- 
+
 const Events = () => {
   const { colors } = useTheme();
   const [active, setActive] = useState('upcoming');
@@ -25,21 +25,23 @@ const Events = () => {
     return event.getTime() >= now.getTime();
   };
 
+  const isPastEvent = (eventDate: string) => {
+  const now = new Date();
+  const event = new Date(eventDate);
+  return event.getTime() < now.getTime();
+};
 
-  for(let i=0; i < 5; i++){
-console.log("iiii",i)
+const filteredEvents = React.useMemo(() => {
+  if (!data) return [];
+
+  if (active === 'upcoming') {
+    // Sirf upcoming events
+    return data.filter((item: any) => isUpcomingEvent(item.date));
   }
 
-  const filteredEvents = React.useMemo(() => {
-    if (!data) return [];
-
-    if (active === 'upcoming') {
-      return data.filter((item: any) => isUpcomingEvent(item.date));
-    }
-
-    return data; 
-  }, [data, active]);
-
+  // "all" tab → sirf past events
+  return data.filter((item: any) => isPastEvent(item.date));
+}, [data, active]);
   return (
     <Wrapper search={false} refetch={refetch}>
       <View style={styles.row}>
@@ -79,9 +81,8 @@ console.log("iiii",i)
       ) : (
         <FlatList
           data={filteredEvents}
-          renderItem={({ item }: any) => (
-            <EventCard item={item} />
-          )}
+          renderItem={({ item }: any) => <EventCard item={item} />}
+          ListEmptyComponent={<NoData height={rs(450)} text={"No events found"}/>}
         />
       )}
     </Wrapper>

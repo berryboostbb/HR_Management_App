@@ -24,9 +24,10 @@ import Routes from './src/routes';
 import DropdownAlert from 'react-native-dropdownalert';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
-import Geocoder from 'react-native-geocoding';
-
-
+import {
+  foregroundListener,
+  setupNotifications,
+} from './src/utils/NotificationHelper';
 
 const App = () => {
   const [isEnabledOne, setIsEnabledOne] = useState(false);
@@ -42,6 +43,13 @@ const App = () => {
     return () => {
       EventRegister.removeEventListener(listener as any);
     };
+  }, []);
+
+  useEffect(() => {
+    setupNotifications();
+    const unsubscribe = foregroundListener();
+
+    return unsubscribe;
   }, []);
 
   useEffect(() => {

@@ -23,7 +23,7 @@ import { AppText, PrimaryButton } from '@components';
 import { useTheme } from '@react-navigation/native';
 import { useFormik } from 'formik';
 import { LoginValidationSchema } from '@services';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLoginMutation } from '../../../src/api/authApi';
 import { setIsLoggedIn, setToken, setUser } from '@redux';
 
@@ -34,6 +34,7 @@ const SignIn = () => {
   const [visible, setVisible] = useState(false);
   const dispatch: any = useDispatch();
   const [login, { isLoading }] = useLoginMutation();
+  const { fcm_token } = useSelector((state: any) => state.user);
 
   const formik: any = useFormik({
     initialValues: {
@@ -46,14 +47,14 @@ const SignIn = () => {
         const result = await login({
           email: values.email,
           password: values.password,
+          fcmToken: fcm_token,
         }).unwrap();
-        console.log("🚀 ~ SignIn ~ result:", result)
         await dispatch(setUser(result?.user));
         await dispatch(setToken(result.token));
         await dispatch(setIsLoggedIn(true));
         // Alert.showSuccess('Loggin Successful!');
-      } catch (err) {
-        console.warn('Login failed:', err);
+      } catch (err:any) {
+        Alert.showError(err?.data?.message || 'Login failed');
       }
     },
   });

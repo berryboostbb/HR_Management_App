@@ -8,12 +8,12 @@ import { Events, Payroll,Profile, Sync } from '@assets';
 import { navigate } from '@services';
 
 const data = [ 
-  {
-    img: Sync,
-    title: 'Sync',
-    desc: 'Last sync yesterday 10:45AM',
-    screen: 'Reports',
-  },
+  // {
+  //   img: Sync,
+  //   title: 'Sync',
+  //   desc: 'Last sync yesterday 10:45AM',
+  //   screen: 'Reports',
+  // },
   {
     img: Payroll,
     title: 'Payroll',

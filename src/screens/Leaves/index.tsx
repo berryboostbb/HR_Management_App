@@ -25,7 +25,7 @@ const Leaves = () => {
     id: user?.employeeId,
   });
 
-  const { data: LeaveData, isLoading: summaryLoading }: any =
+  const { data: LeaveData = [], isLoading: summaryLoading }: any =
     useGetAllUsersQuery({
       id: user?.employeeId,
     });

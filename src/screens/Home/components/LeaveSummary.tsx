@@ -21,19 +21,19 @@ const LeaveSummary = ({ data, loading }: any) => {
   const DATA = [
     {
       key: 'Annual',
-      value: Summary?.annualLeave?.consumed,
+      value: Summary?.annualLeave?.consumed || 0,
       color: '#34C759',
       label: 'Available:10',
     },
     {
       key: 'Casual',
-      value: Summary?.casualLeave?.consumed,
+      value: Summary?.casualLeave?.consumed || 0,
       color: '#F0C000',
       label: 'Availed:1',
     },
     {
       key: 'Sick',
-      value: Summary?.sickLeave?.consumed,
+      value: Summary?.sickLeave?.consumed || 0,
       color: '#E90761',
       label: 'Pending:0',
       title: 'Sick Leave',

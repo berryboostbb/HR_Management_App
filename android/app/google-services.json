@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "469059695994",
+    "project_id": "hr-mamangement",
+    "storage_bucket": "hr-mamangement.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:469059695994:android:a580be1e7d6064fc4dd2c3",
+        "android_client_info": {
+          "package_name": "com.hr_management_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGQpmkZmowaN7ARTEYvyyD8bBfj_jEeZI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

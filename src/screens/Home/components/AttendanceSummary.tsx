@@ -5,7 +5,6 @@ import { Month, rs, Year } from '@utils';
 import { useTheme } from '@react-navigation/native';
 import { CalenderIcon2 } from '@assets';
 import WheelPicker from '@quidone/react-native-wheel-picker';
-import WheelPickerFeedback from '@quidone/react-native-wheel-picker-feedback';
 import { useGetAllAttendanceQuery } from '../../../../src/api/userApi';
 import { useSelector } from 'react-redux';
 
@@ -124,7 +123,6 @@ const AttendanceSummary = () => {
                 value={tempMonth}
                 onValueChanged={({ item }) => {
                   setTempMonth(item.value);
-                  WheelPickerFeedback.triggerSoundAndImpact();
                 }}
               />
             </View>
@@ -135,7 +133,6 @@ const AttendanceSummary = () => {
                 value={tempYear}
                 onValueChanged={({ item }) => {
                   setTempYear(item.value);
-                  WheelPickerFeedback.triggerSoundAndImpact();
                 }}
               />
             </View>

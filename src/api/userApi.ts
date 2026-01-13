@@ -102,7 +102,7 @@ export const userApi = baseApi.injectEndpoints({
       // providesTags: ['Status'],
     }),
     getPayroll: builder.query({
-      query: ({ id }) => `/payroll/employee/${id}`,
+      query: ({ id,month,year }) => `/payroll/getAllPayrolls?employeeId=${id}&month=${month}&year=${year}`,
     }),
   }),
 });

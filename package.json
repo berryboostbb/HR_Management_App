@@ -12,7 +12,6 @@
   "dependencies": {
     "@notifee/react-native": "^9.1.8",
     "@quidone/react-native-wheel-picker": "^1.6.1",
-    "@quidone/react-native-wheel-picker-feedback": "^2.0.0",
     "@react-native-async-storage/async-storage": "^2.2.0",
     "@react-native-community/checkbox": "^0.5.20",
     "@react-native-community/datetimepicker": "^8.5.1",

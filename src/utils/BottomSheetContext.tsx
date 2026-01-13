@@ -59,7 +59,6 @@ export const BottomSheetProvider: React.FC<{ children: ReactNode }> = ({
       'hardwareBackPress',
       () => {
         if (visible) {
-          console.log("chal;a........")
           hideBottomSheet();
           return true;
         }

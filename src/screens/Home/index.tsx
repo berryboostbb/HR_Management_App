@@ -37,7 +37,7 @@ const Home = () => {
   const [checkLocation] = useCheckLocationMutation();
   const [checkOut] = useCheckOutMutation();
 
-  console.log('🚀 ~ Home ~ user:...', data);
+  // console.log('🚀 ~ Home ~ user:...', user);
 
   const [locationFetch, setFetchLocation] = useState(false);
   const status = data?.data?.checkInStatus;

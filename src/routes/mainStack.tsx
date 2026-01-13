@@ -11,6 +11,7 @@ import LeavesStack from './stacks/LeavesStack';
 import { EventsTab, HomeIcon, LeavesIcon, MoreIcon, PlanIcon } from '@assets';
 import MoreStack from './stacks/MoreStack';
 import EventStack from './stacks/EventStack';
+import { Notification } from '@screens';
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -131,6 +132,11 @@ const MainStack = () => {
       <Stack.Navigator screenOptions={{ headerShown: false }}>
         {/* Wrap SEARCH provider only around tabs to avoid re-renders of modals */}
         <Stack.Screen name="MyTabs" component={MyTabs}/>
+        <Stack.Screen
+            name="Notification"
+            component={Notification}
+            options={{ presentation: 'transparentModal' }}
+          />
       </Stack.Navigator>
     </SearchProvider>
   );

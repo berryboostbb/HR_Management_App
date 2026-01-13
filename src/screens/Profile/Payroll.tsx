@@ -1,46 +1,82 @@
 import {
   ActivityIndicator,
+  Modal,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, { useSyncExternalStore } from 'react';
-import { AppText, Wrapper } from '@components';
+import React, { useCallback, useState, useSyncExternalStore } from 'react';
+import { AppText, NoData, Wrapper } from '@components';
 import { useTheme } from '@react-navigation/native';
-import { rs } from '@utils';
+import { Month, rs, Year } from '@utils';
 import { DatePickerIcon } from '@assets';
 import { DateTimePickerAndroid } from '@react-native-community/datetimepicker';
 import { formatDate } from '@services';
 import { useGetPayrollQuery } from '../../../src/api/userApi';
 import { useSelector } from 'react-redux';
+import WheelPicker from '@quidone/react-native-wheel-picker';
 
 const Payroll = () => {
   const { colors } = useTheme();
   const styles = useStyles(colors);
   const { user } = useSelector((state: any) => state?.user);
 
-  const { data, isLoading }: any = useGetPayrollQuery({ id: user?._id });
-  console.log('🚀 ~ Payroll ~ data:', data);
+  const currentMonthIndex = new Date().getMonth();
+  const currentYear = new Date().getFullYear().toString();
 
-  const onChange = (event: any, selectedDate: any) => {
-    if (event.type === 'set' && selectedDate) {
-      const formatted = formatDate(selectedDate);
-      // formik?.setFieldValue('date', formatted);
-    }
-  };
+  // ---------------- FINAL VALUES ----------------
+  const [monthIndex, setMonthIndex] = useState(currentMonthIndex);
+  const [monthName, setMonthName] = useState(Month[currentMonthIndex]);
+  const [yearValue, setYearValue] = useState(currentYear);
 
-  const showMode = () => {
-    DateTimePickerAndroid.open({
-      value: new Date(),
-      onChange: onChange,
-      mode: 'date',
-      is24Hour: true,
-      minimumDate: new Date(),
-    });
-  };
+  // ---------------- TEMP VALUES (MODAL) ----------------
+  const [tempMonthIndex, setTempMonthIndex] = useState(currentMonthIndex);
+  const [tempYear, setTempYear] = useState(currentYear);
+  const [show, setShow] = useState(false);
 
-  if (isLoading) {
+  // ---------------- API ----------------
+  const { data, isLoading,isFetching }: any = useGetPayrollQuery({
+    id: user?.employeeId,
+    month: monthName,
+    year: yearValue,
+  });
+
+  const payrollData = data ? data[0] : [];
+  const allowance =
+    payrollData?.allowances?.medical +
+    payrollData?.allowances?.others +
+    payrollData?.allowances?.transport;
+
+  const basic_Allowance = payrollData?.basicSalary + allowance
+  const deduction =  payrollData?.deductions?.pf +payrollData?.deductions?.tax + payrollData?.deductions?.loan + payrollData?.deductions?.others
+
+const totalSalary = basic_Allowance - deduction
+    
+  // ---------------- PICKER TOGGLE ----------------
+  const showPicker = useCallback(
+    (v: boolean) => {
+      if (v) {
+        setTempMonthIndex(monthIndex);
+        setTempYear(yearValue);
+      }
+      setShow(v);
+    },
+    [monthIndex, yearValue],
+  );
+
+  // ---------------- DATA ----------------
+  const monthData = Month.map((m, i) => ({
+    value: i,
+    label: m,
+  }));
+
+  const yearData = Year.map(y => ({
+    value: y.toString(),
+    label: y.toString(),
+  }));
+  if (isLoading || isFetching) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size={'large'} color={colors.primary} />
@@ -51,17 +87,24 @@ const Payroll = () => {
   return (
     <Wrapper search={false}>
       <View style={styles.card}>
-        <TouchableOpacity onPress={showMode} style={styles.calenderIcon}>
+        <TouchableOpacity
+          onPress={() => showPicker(true)}
+          style={styles.calenderIcon}
+        >
           <DatePickerIcon />
         </TouchableOpacity>
         <AppText medium>Salary</AppText>
         <AppText regular color={colors.mediumGray}>
-          Current net salary as of <AppText medium>{data?.month} {data?.year}</AppText>
+          Current net salary as of{' '}
+          <AppText medium>
+            {monthName} {yearValue}
+          </AppText>
         </AppText>
+       {data?.length > 0 ? <>
         <AppText size={16} bold style={styles.amountView}>
           Rs{' '}
           <AppText size={24} bold>
-            150,000{' '}
+            {totalSalary?.toLocaleString()}
           </AppText>
           <AppText regular color={colors.mediumGray}>
             / Month
@@ -71,13 +114,27 @@ const Payroll = () => {
         <View style={styles.summaryView}>
           <AppText medium>Salary Summary</AppText>
           {[
-            { title: 'Basic', value: '105,000' },
-            { title: 'Allowance', value: '56,000' },
-            { title: 'Medical', value: '15,000' },
-            { title: 'Provident Fund', value: '-5,000' },
-            { title: 'Professional Tax', value: '-6,000' },
-            { title: 'Loan', value: '-25,000' },
-            { title: 'Deduction', value: '-10,000' },
+            {
+              title: 'Basic',
+              value: payrollData?.basicSalary?.toLocaleString(),
+            },
+            { title: 'Allowance', value: allowance?.toLocaleString() },
+            {
+              title: 'Provident Fund',
+              value: `-${payrollData?.deductions?.pf?.toLocaleString()}`,
+            },
+            {
+              title: 'Professional Tax',
+              value: `-${payrollData?.deductions?.tax?.toLocaleString()}`,
+            },
+            {
+              title: 'Loan',
+              value: `-${payrollData?.deductions?.loan?.toLocaleString()}`,
+            },
+            {
+              title: 'Deduction',
+              value: `-${payrollData?.deductions?.others?.toLocaleString()}`,
+            },
           ]?.map((item: any, index: any) => (
             <View key={index} style={styles.row}>
               <AppText lineHeight={rs(12)} regular color={colors.mediumGray}>
@@ -95,10 +152,49 @@ const Payroll = () => {
             Total
           </AppText>
           <AppText size={14} regular>
-            150,000
+            {totalSalary?.toLocaleString()}
           </AppText>
         </View>
+       </> : <NoData bgColor={"transparent"} text={"No Payroll found"}/>}
       </View>
+      <Modal
+        onRequestClose={() => showPicker(false)}
+        animationType="fade"
+        visible={show}
+        backdropColor={'transparent'}
+      >
+        <View style={styles.wheelContainer}>
+          <View style={[styles.rowBetween, { backgroundColor: colors.white }]}>
+            <View style={{ width: '45%' }}>
+              <WheelPicker
+                data={monthData}
+                value={tempMonthIndex}
+                onValueChanged={({ item }) => setTempMonthIndex(item.value)}
+              />
+            </View>
+
+            <View style={{ width: '35%' }}>
+              <WheelPicker
+                data={yearData}
+                value={tempYear}
+                onValueChanged={({ item }) => setTempYear(item.value)}
+              />
+            </View>
+
+            <Pressable
+              onPress={() => {
+                setMonthIndex(tempMonthIndex);
+                setMonthName(Month[tempMonthIndex]); // ✅ STRING MONTH
+                setYearValue(tempYear);
+                showPicker(false);
+              }}
+              style={[styles.btn, { borderColor: colors.primary }]}
+            >
+              <AppText>OK</AppText>
+            </Pressable>
+          </View>
+        </View>
+      </Modal>
     </Wrapper>
   );
 };
@@ -146,5 +242,31 @@ const useStyles = (colors: any) =>
       flexDirection: 'row',
       justifyContent: 'space-between',
       alignItems: 'center',
+    },
+
+    wheelContainer: {
+      flex: 1,
+      justifyContent: 'center',
+      paddingHorizontal: rs(16),
+    },
+    rowBetween: {
+      flexDirection: 'row',
+      width: '100%',
+      borderWidth: 1,
+      justifyContent: 'space-between',
+      borderRadius: rs(16),
+
+      paddingHorizontal: rs(16),
+      paddingBottom: rs(16),
+    },
+
+    btn: {
+      borderWidth: 1,
+      position: 'absolute',
+      bottom: rs(12),
+      right: rs(12),
+      paddingHorizontal: rs(16),
+      paddingVertical: rs(4),
+      borderRadius: rs(4),
     },
   });

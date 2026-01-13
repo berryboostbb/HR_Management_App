@@ -1873,11 +1873,6 @@
   resolved "https://registry.npmjs.org/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==
 
-"@quidone/react-native-wheel-picker-feedback@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.npmjs.org/@quidone/react-native-wheel-picker-feedback/-/react-native-wheel-picker-feedback-2.0.0.tgz#099806044405d56d4364cc1206de716340d2c2ff"
-  integrity sha512-Nb+uwmKtlC9lea1oQp0DDJEE9tOVe3iiFH6IxmoBj+aaGnyHWhNZ0J0VjVcb4+Qp7WtHNQt08JWzEEIAL9zF1g==
-
 "@quidone/react-native-wheel-picker@^1.6.1":
   version "1.6.1"
   resolved "https://registry.npmjs.org/@quidone/react-native-wheel-picker/-/react-native-wheel-picker-1.6.1.tgz#1dae922a82b6c9553c5116fc2be342c64e062d5c"
